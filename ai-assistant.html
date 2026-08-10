@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grandpa Assistant AI</title>
+<script src="https://js.puter.com/v2/"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#111;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;justify-content:center}.app{width:min(900px,94%);padding:28px 0;text-align:center}h1{font-size:48px;margin:0 0 8px}p{font-size:21px}.chat{background:#222;border-radius:20px;padding:20px;margin:20px 0;text-align:left;max-height:480px;overflow:auto}.msg{padding:15px 18px;border-radius:15px;margin:12px 0;font-size:20px;line-height:1.45}.user{background:#1976d2}.assistant{background:#333}.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}textarea{width:100%;min-height:100px;border:0;border-radius:15px;padding:15px;font-size:20px;background:#fff;color:#111}button{border:0;border-radius:16px;padding:18px 25px;font-size:21px;font-weight:bold;cursor:pointer;background:#673ab7;color:#fff}button.secondary{background:#444}button.mic{background:#1976d2}.status{font-size:22px;min-height:32px;margin:12px}.back{background:#333;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🧠 Grandpa Assistant AI</h1>
+<p>Ask questions by typing or speaking.</p>
+<div id="status" class="status">Ready</div>
+<div id="chat" class="chat"><div class="msg assistant">Hello! I'm Grandpa Assistant. What can I help you with?</div></div>
+<textarea id="question" placeholder="Type your question here..."></textarea>
+<div class="controls">
+<button onclick="askTyped()">🧠 ASK AI</button>
+<button class="mic" onclick="listen()">🎤 SPEAK</button>
+<button class="secondary" onclick="clearChat()">🗑️ CLEAR</button>
+</div>
+<button class="back" onclick="location.href='index.html'">⬅️ Back to Assistant</button>
+</div>
+<script>
+const history=[{role:'system',content:'You are Grandpa Assistant, a friendly and patient voice assistant for an older adult. Use simple, clear language and keep spoken answers reasonably short. Never claim that you called emergency services or contacted a person unless the website actually performed that action.'}];
+let speaking=false;
+function addMessage(role,text){const box=document.getElementById('chat');const div=document.createElement('div');div.className='msg '+role;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight}
+function speak(text){if(!('speechSynthesis' in window))return;speaking=true;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.9;u.onend=()=>{speaking=false};window.speechSynthesis.speak(u)}
+async function ask(question){question=question.trim();if(!question)return;addMessage('user',question);history.push({role:'user',content:question});document.getElementById('status').textContent='🧠 Thinking...';try{const result=await puter.ai.chat(history,{model:'gpt-5.4-nano'});let answer=result?.message?.content??result?.content??result; if(Array.isArray(answer))answer=answer.map(x=>x.text||'').join(' ');answer=String(answer).trim();history.push({role:'assistant',content:answer});addMessage('assistant',answer);document.getElementById('status').textContent='Ready';speak(answer)}catch(e){console.error(e);document.getElementById('status').textContent='❌ AI error';addMessage('assistant','Sorry, I could not connect to the AI right now.');}}
+function askTyped(){const box=document.getElementById('question');const q=box.value;box.value='';ask(q)}
+function clearChat(){history.splice(1);document.getElementById('chat').innerHTML='<div class="msg assistant">Chat cleared. What would you like to ask?</div>';document.getElementById('status').textContent='Ready'}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;if(SR){rec=new SR();rec.lang='en-US';rec.continuous=false;rec.interimResults=false;rec.onstart=()=>{document.getElementById('status').textContent='🎤 Listening...'};rec.onresult=e=>{const q=e.results[0][0].transcript;document.getElementById('question').value=q;ask(q)};rec.onerror=e=>{document.getElementById('status').textContent='❌ Microphone error';console.log(e.error)};rec.onend=()=>{if(!speaking)document.getElementById('status').textContent='Ready'}}else{document.getElementById('status').textContent='Voice recognition is not supported in this browser.'}
+function listen(){if(!rec){speak('Voice recognition is not supported in this browser.');return}try{window.speechSynthesis.cancel();rec.start()}catch(e){console.log(e)}}
+document.getElementById('question').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();askTyped()}});
+</script>
+</body>
+</html>
