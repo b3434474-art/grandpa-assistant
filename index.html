@@ -28,6 +28,7 @@
 
     .app {
       width: min(1000px, 95%);
+
       text-align: center;
 
       padding: 20px 0;
@@ -35,20 +36,24 @@
 
     h1 {
       font-size: 48px;
-      margin-bottom: 5px;
+
+      margin: 0 0 5px 0;
     }
 
     #clock {
-      font-size: 52px;
+      font-size: 58px;
+
       font-weight: bold;
+
       margin: 10px;
     }
 
     #status {
-      font-size: 28px;
+      font-size: 30px;
+
       margin: 15px 0;
 
-      min-height: 40px;
+      min-height: 45px;
     }
 
     #heard {
@@ -105,6 +110,26 @@
       background: white;
 
       color: black;
+
+      width: 80%;
+
+      max-width: 600px;
+    }
+
+    #wakeButton {
+      background: #1976d2;
+
+      color: white;
+
+      width: 80%;
+
+      max-width: 600px;
+    }
+
+    #micButton {
+      background: #444;
+
+      color: white;
 
       width: 80%;
 
@@ -247,9 +272,22 @@
       min-height: 25px;
     }
 
+    #wakeStatus {
+      font-size: 22px;
+
+      margin: 10px;
+    }
+
+    .on {
+      color: #4caf50;
+    }
+
+    .off {
+      color: #ff5252;
+    }
+
   </style>
 </head>
-
 
 <body>
 
@@ -257,7 +295,9 @@
 <main class="app">
 
 
-  <h1>🎙️ Grandpa Assistant</h1>
+  <h1>
+    🎙️ Grandpa Assistant
+  </h1>
 
 
   <div id="clock">
@@ -275,17 +315,53 @@
   </div>
 
 
+  <!-- MAIN MICROPHONE -->
+
+
   <button
     id="listenButton"
-    onclick="startListening()"
+    onclick="startCommandListening()"
   >
     🎤 TALK TO ME
   </button>
 
 
+  <!-- WAKE MODE -->
+
+
+  <button
+    id="wakeButton"
+    onclick="toggleWakeMode()"
+  >
+    🟢 ENABLE "HEY ASSISTANT"
+  </button>
+
+
+  <div id="wakeStatus">
+    Wake mode: <span class="off">OFF</span>
+  </div>
+
+
+  <!-- MIC -->
+
+
+  <button
+    id="micButton"
+    onclick="toggleMicrophone()"
+  >
+    🔇 Microphone Control
+  </button>
+
+
+  <!-- WEATHER -->
+
+
   <div id="weather">
     🌤️ Loading weather...
   </div>
+
+
+  <!-- TIMER -->
 
 
   <div id="timer"></div>
@@ -364,7 +440,7 @@
     <br><br>
 
     You can contact Helen Williams
-    or another trusted family member.
+    if you need assistance.
 
     <br><br>
 
@@ -442,7 +518,6 @@
 
     <div id="savedMessage"></div>
 
-
   </div>
 
 
@@ -453,11 +528,29 @@
 
 
   // =====================================================
-  // TEXT TO SPEECH
+  // SETTINGS
+  // =====================================================
+
+
+  let microphoneEnabled = true;
+
+  let wakeMode = false;
+
+
+  // =====================================================
+  // SPEECH
   // =====================================================
 
 
   function speak(text) {
+
+
+    if (!microphoneEnabled) {
+
+      return;
+
+    }
+
 
     window.speechSynthesis.cancel();
 
@@ -471,19 +564,26 @@
     speech.pitch = 1;
 
 
-    window.speechSynthesis.speak(speech);
+    window.speechSynthesis.speak(
+      speech
+    );
 
 
-    document.getElementById("status").textContent =
+    document.getElementById(
+      "status"
+    ).textContent =
       "🔊 Speaking...";
 
 
-    speech.onend = function() {
+    speech.onend =
+      function() {
 
-      document.getElementById("status").textContent =
-        "Ready";
+        document.getElementById(
+          "status"
+        ).textContent =
+          "Ready";
 
-    };
+      };
 
   }
 
@@ -495,26 +595,35 @@
 
   function updateClock() {
 
-    const now = new Date();
+
+    const now =
+      new Date();
 
 
     const time =
-      now.toLocaleTimeString([], {
+      now.toLocaleTimeString(
+        [],
+        {
+          hour: "numeric",
 
-        hour: "numeric",
-
-        minute: "2-digit"
-
-      });
+          minute: "2-digit"
+        }
+      );
 
 
-    document.getElementById("clock").textContent =
+    document.getElementById(
+      "clock"
+    ).textContent =
       time;
 
   }
 
 
-  setInterval(updateClock, 1000);
+  setInterval(
+    updateClock,
+    1000
+  );
+
 
   updateClock();
 
@@ -525,6 +634,7 @@
 
 
   function sayHello() {
+
 
     speak(
       "Hello! How can I help you?"
@@ -540,21 +650,25 @@
 
   function sayTime() {
 
-    const now = new Date();
+
+    const now =
+      new Date();
 
 
     const time =
-      now.toLocaleTimeString([], {
+      now.toLocaleTimeString(
+        [],
+        {
+          hour: "numeric",
 
-        hour: "numeric",
-
-        minute: "2-digit"
-
-      });
+          minute: "2-digit"
+        }
+      );
 
 
     speak(
-      "The time is " + time
+      "The time is " +
+      time
     );
 
   }
@@ -562,7 +676,6 @@
 
   // =====================================================
   // WEATHER
-  // ARTESIA, NEW MEXICO
   // =====================================================
 
 
@@ -572,7 +685,9 @@
 
 
     const weatherBox =
-      document.getElementById("weather");
+      document.getElementById(
+        "weather"
+      );
 
 
     weatherBox.textContent =
@@ -582,9 +697,12 @@
     try {
 
 
-      const latitude = 32.8423;
+      const latitude =
+        32.8423;
 
-      const longitude = -104.4406;
+
+      const longitude =
+        -104.4406;
 
 
       const url =
@@ -611,7 +729,7 @@
       if (!response.ok) {
 
         throw new Error(
-          "Weather request failed"
+          "Weather failed"
         );
 
       }
@@ -642,10 +760,13 @@
       weatherBox.innerHTML =
 
         "🌤️ <strong>" +
+
         "Artesia, New Mexico" +
+
         "</strong><br>" +
 
         temperature +
+
         "°F — " +
 
         description +
@@ -658,6 +779,7 @@
 
 
       if (speakWeather) {
+
 
         speak(
 
@@ -691,7 +813,7 @@
       if (speakWeather) {
 
         speak(
-          "Sorry, I couldn't get the weather right now."
+          "Sorry, I couldn't get the weather."
         );
 
       }
@@ -749,17 +871,23 @@
   // =====================================================
 
 
-  let timerInterval = null;
+  let timerInterval =
+    null;
 
 
   function setTimer(minutes) {
 
 
-    if (!minutes || minutes <= 0) {
+    if (
+      !minutes ||
+      minutes <= 0
+    ) {
+
 
       speak(
         "Please tell me how many minutes."
       );
+
 
       return;
 
@@ -767,18 +895,24 @@
 
 
     const timerBox =
-      document.getElementById("timer");
+      document.getElementById(
+        "timer"
+      );
 
 
     if (timerInterval) {
 
-      clearInterval(timerInterval);
+      clearInterval(
+        timerInterval
+      );
 
     }
 
 
     let seconds =
-      Math.round(minutes * 60);
+      Math.round(
+        minutes * 60
+      );
 
 
     speak(
@@ -800,7 +934,9 @@
 
 
       const mins =
-        Math.floor(seconds / 60);
+        Math.floor(
+          seconds / 60
+        );
 
 
       const secs =
@@ -815,7 +951,9 @@
 
         ":" +
 
-        String(secs).padStart(
+        String(
+          secs
+        ).padStart(
           2,
           "0"
         );
@@ -829,7 +967,8 @@
         );
 
 
-        timerInterval = null;
+        timerInterval =
+          null;
 
 
         timerBox.textContent =
@@ -864,11 +1003,12 @@
 
 
   // =====================================================
-  // LOCAL CONTACT STORAGE
+  // CONTACT STORAGE
   // =====================================================
 
 
   function getHelenPhone() {
+
 
     return localStorage.getItem(
       "helenPhone"
@@ -903,7 +1043,8 @@
 
     document.getElementById(
       "savedMessage"
-    ).textContent = "";
+    ).textContent =
+      "";
 
   }
 
@@ -950,7 +1091,8 @@
     document.getElementById(
       "savedMessage"
     ).textContent =
-      "✅ Phone number saved on this computer.";
+
+      "✅ Saved on this computer.";
 
 
     speak(
@@ -1015,8 +1157,10 @@
     setTimeout(
       function() {
 
+
         window.location.href =
           "tel:" + phone;
+
 
       },
       800
@@ -1080,8 +1224,10 @@
     setTimeout(
       function() {
 
+
         window.location.href =
           "sms:" + phone;
+
 
       },
       800
@@ -1134,6 +1280,65 @@
 
 
   // =====================================================
+  // MICROPHONE CONTROL
+  // =====================================================
+
+
+  function toggleMicrophone() {
+
+
+    microphoneEnabled =
+      !microphoneEnabled;
+
+
+    const button =
+      document.getElementById(
+        "micButton"
+      );
+
+
+    if (microphoneEnabled) {
+
+
+      button.textContent =
+        "🔇 Microphone Control";
+
+
+      document.getElementById(
+        "status"
+      ).textContent =
+        "Ready";
+
+
+    } else {
+
+
+      button.textContent =
+        "🔴 MICROPHONE OFF";
+
+
+      document.getElementById(
+        "status"
+      ).textContent =
+        "🔴 Microphone disabled";
+
+
+      if (recognition) {
+
+        try {
+
+          recognition.stop();
+
+        } catch (e) {}
+
+      }
+
+    }
+
+  }
+
+
+  // =====================================================
   // SPEECH RECOGNITION
   // =====================================================
 
@@ -1176,6 +1381,7 @@
         ).textContent =
           "🎤 Listening...";
 
+
       };
 
 
@@ -1190,7 +1396,9 @@
         document.getElementById(
           "heard"
         ).textContent =
-          "You said: " + text;
+
+          "You said: " +
+          text;
 
 
         document.getElementById(
@@ -1199,7 +1407,10 @@
           "🧠 Thinking...";
 
 
-        handleCommand(text);
+        handleCommand(
+          text
+        );
+
 
       };
 
@@ -1208,16 +1419,17 @@
       function(event) {
 
 
+        console.log(
+          "Speech error:",
+          event.error
+        );
+
+
         document.getElementById(
           "status"
         ).textContent =
           "❌ Microphone error";
 
-
-        console.log(
-          "Speech recognition error:",
-          event.error
-        );
 
       };
 
@@ -1226,49 +1438,50 @@
       function() {
 
 
-        if (
-
-          document.getElementById(
-            "status"
-          ).textContent ===
-          "🎤 Listening..."
-
-        ) {
+        if (wakeMode &&
+            microphoneEnabled) {
 
 
-          document.getElementById(
-            "status"
-          ).textContent =
-            "Ready";
+          setTimeout(
+            listenForWakeWord,
+            500
+          );
+
 
         }
+
 
       };
 
   }
 
 
-  else {
+  // =====================================================
+  // NORMAL COMMAND LISTENING
+  // =====================================================
 
 
-    document.getElementById(
-      "status"
-    ).textContent =
-      "Speech recognition isn't supported.";
-
-  }
+  function startCommandListening() {
 
 
-  function startListening() {
+    if (!microphoneEnabled) {
+
+
+      speak(
+        "The microphone is turned off."
+      );
+
+
+      return;
+
+    }
 
 
     if (!recognition) {
 
 
       speak(
-
         "Sorry, your browser doesn't support voice recognition."
-
       );
 
 
@@ -1280,18 +1493,218 @@
     try {
 
 
+      recognition.onresult =
+        commandResult;
+
+
       recognition.start();
 
+
+    } catch (error) {
+
+
+      console.log(error);
+
+    }
+
+  }
+
+
+  function commandResult(event) {
+
+
+    const text =
+      event.results[0][0].transcript;
+
+
+    document.getElementById(
+      "heard"
+    ).textContent =
+
+      "You said: " +
+      text;
+
+
+    handleCommand(
+      text
+    );
+
+  }
+
+
+  // =====================================================
+  // WAKE WORD MODE
+  // =====================================================
+
+
+  function toggleWakeMode() {
+
+
+    if (!microphoneEnabled) {
+
+
+      alert(
+        "Turn the microphone on first."
+      );
+
+
+      return;
 
     }
 
 
-    catch (error) {
+    wakeMode =
+      !wakeMode;
 
 
-      console.log(
-        "Recognition could not start:",
-        error
+    const button =
+      document.getElementById(
+        "wakeButton"
+      );
+
+
+    const status =
+      document.getElementById(
+        "wakeStatus"
+      );
+
+
+    if (wakeMode) {
+
+
+      button.textContent =
+        "🔴 DISABLE \"HEY ASSISTANT\"";
+
+
+      status.innerHTML =
+        'Wake mode: <span class="on">ON</span>';
+
+
+      speak(
+        "Wake mode is on. Say Hey Assistant."
+      );
+
+
+      setTimeout(
+        listenForWakeWord,
+        1500
+      );
+
+
+    } else {
+
+
+      button.textContent =
+        '🟢 ENABLE "HEY ASSISTANT"';
+
+
+      status.innerHTML =
+        'Wake mode: <span class="off">OFF</span>';
+
+
+      speak(
+        "Wake mode is off."
+      );
+
+
+      try {
+
+        recognition.stop();
+
+      } catch (e) {}
+
+    }
+
+  }
+
+
+  function listenForWakeWord() {
+
+
+    if (
+      !wakeMode ||
+      !microphoneEnabled
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+
+      recognition.onresult =
+        wakeWordResult;
+
+
+      recognition.start();
+
+
+    } catch (error) {
+
+
+      console.log(error);
+
+    }
+
+  }
+
+
+  function wakeWordResult(event) {
+
+
+    const text =
+      event.results[0][0].transcript;
+
+
+    const lower =
+      text.toLowerCase();
+
+
+    document.getElementById(
+      "heard"
+    ).textContent =
+
+      "Heard: " +
+      text;
+
+
+    if (
+
+      lower.includes(
+        "hey assistant"
+      ) ||
+
+      lower.includes(
+        "hey computer"
+      )
+
+    ) {
+
+
+      speak(
+        "Yes? How can I help?"
+      );
+
+
+      setTimeout(
+        startCommandListening,
+        1200
+      );
+
+
+      return;
+
+    }
+
+
+    if (wakeMode) {
+
+
+      setTimeout(
+        listenForWakeWord,
+        500
       );
 
     }
@@ -1527,7 +1940,9 @@
         );
 
 
-      setTimer(minutes);
+      setTimer(
+        minutes
+      );
 
 
       return;
