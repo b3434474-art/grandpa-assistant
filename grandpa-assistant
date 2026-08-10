@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grandpa Assistant</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: min(900px, 95%);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    #status {
+      font-size: 28px;
+      margin: 20px 0;
+      min-height: 40px;
+    }
+
+    #heard {
+      font-size: 24px;
+      min-height: 35px;
+      margin-bottom: 30px;
+    }
+
+    button {
+      border: none;
+      border-radius: 20px;
+      padding: 25px 45px;
+      margin: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #listenButton {
+      background: white;
+      color: black;
+      width: 80%;
+      max-width: 600px;
+    }
+
+    #listenButton:hover {
+      transform: scale(1.03);
+    }
+
+    .small-button {
+      background: #333;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <h1>🎙️ Grandpa Assistant</h1>
+
+    <div id="status">Ready</div>
+
+    <div id="heard">
+      Press the microphone and talk.
+    </div>
+
+    <button id="listenButton" onclick="startListening()">
+      🎤 TALK TO ME
+    </button>
+
+    <br>
+
+    <button class="small-button" onclick="sayTime()">
+      🕐 What time is it?
+    </button>
+
+    <button class="small-button" onclick="sayHello()">
+      👋 Hello
+    </button>
+
+  </main>
+
+<script>
+
+  // -------------------------
+  // TEXT TO SPEECH
+  // -------------------------
+
+  function speak(text) {
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+
+    document.getElementById("status").textContent = "🔊 Speaking...";
+    
+    speech.onend = function() {
+      document.getElementById("status").textContent = "Ready";
+    };
+  }
+
+
+  // -------------------------
+  // SAY HELLO
+  // -------------------------
+
+  function sayHello() {
+    speak("Hello! How can I help you?");
+  }
+
+
+  // -------------------------
+  // TIME
+  // -------------------------
+
+  function sayTime() {
+
+    const now = new Date();
+
+    const time = now.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+
+    speak("The time is " + time);
+  }
+
+
+  // -------------------------
+  // SPEECH RECOGNITION
+  // -------------------------
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  let recognition;
+
+  if (SpeechRecognition) {
+
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = function() {
+      document.getElementById("status").textContent =
+        "🎤 Listening...";
+    };
+
+    recognition.onresult = function(event) {
+
+      const text =
+        event.results[0][0].transcript;
+
+      document.getElementById("heard").textContent =
+        "You said: " + text;
+
+      document.getElementById("status").textContent =
+        "🧠 Thinking...";
+
+      handleCommand(text);
+    };
+
+    recognition.onerror = function(event) {
+
+      document.getElementById("status").textContent =
+        "❌ Microphone error";
+
+      console.log(event.error);
+    };
+
+    recognition.onend = function() {
+
+      if (
+        document.getElementById("status").textContent ===
+        "🎤 Listening..."
+      ) {
+        document.getElementById("status").textContent =
+          "Ready";
+      }
+    };
+
+  } else {
+
+    document.getElementById("status").textContent =
+      "Speech recognition isn't supported by this browser.";
+  }
+
+
+  // -------------------------
+  // START LISTENING
+  // -------------------------
+
+  function startListening() {
+
+    if (!recognition) {
+      speak("Sorry, your browser does not support voice recognition.");
+      return;
+    }
+
+    recognition.start();
+  }
+
+
+  // -------------------------
+  // COMMANDS
+  // -------------------------
+
+  function handleCommand(command) {
+
+    const text = command.toLowerCase();
+
+    if (text.includes("hello") || text.includes("hi")) {
+
+      speak("Hello! It's nice to hear from you.");
+
+    }
+
+    else if (
+      text.includes("what time") ||
+      text.includes("time is it")
+    ) {
+
+      sayTime();
+
+    }
+
+    else if (text.includes("youtube")) {
+
+      speak("Opening YouTube.");
+
+      setTimeout(function() {
+        window.open(
+          "https://www.youtube.com/",
+          "_blank"
+        );
+      }, 1000);
+
+    }
+
+    else if (text.includes("google")) {
+
+      speak("Opening Google.");
+
+      setTimeout(function() {
+        window.open(
+          "https://www.google.com/",
+          "_blank"
+        );
+      }, 1000);
+
+    }
+
+    else if (text.includes("help")) {
+
+      speak("I'm here. Please use the help button or contact your family if you need assistance.");
+
+    }
+
+    else {
+
+      speak(
+        "I heard you say " + command +
+        ". I don't know how to do that yet."
+      );
+
+    }
+  }
+
+</script>
+
+</body>
+</html>
