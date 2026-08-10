@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Grandpa Assistant</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -13,9 +15,12 @@
     body {
       margin: 0;
       min-height: 100vh;
+
       font-family: Arial, sans-serif;
+
       background: #111;
       color: white;
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,6 +29,8 @@
     .app {
       width: min(1000px, 95%);
       text-align: center;
+
+      padding: 20px 0;
     }
 
     h1 {
@@ -40,403 +47,1265 @@
     #status {
       font-size: 28px;
       margin: 15px 0;
+
       min-height: 40px;
     }
 
     #heard {
       font-size: 24px;
+
       min-height: 35px;
+
       margin-bottom: 20px;
     }
 
     #weather {
       font-size: 28px;
+
       margin: 20px auto;
+
       padding: 20px;
+
       border-radius: 20px;
+
       background: #222;
+
       max-width: 700px;
+    }
+
+    #timer {
+      font-size: 32px;
+
+      margin: 20px;
+
+      min-height: 40px;
     }
 
     button {
       border: none;
+
       border-radius: 20px;
+
       padding: 22px 35px;
+
       margin: 8px;
+
       font-size: 25px;
+
       font-weight: bold;
+
       cursor: pointer;
+    }
+
+    button:hover {
+      transform: scale(1.03);
     }
 
     #listenButton {
       background: white;
+
       color: black;
+
       width: 80%;
+
       max-width: 600px;
     }
 
     .small-button {
       background: #333;
+
       color: white;
     }
 
-    #timer {
-      font-size: 32px;
-      margin: 20px;
-      min-height: 40px;
+    .contact-button {
+      background: #1769aa;
+
+      color: white;
+
+      width: 80%;
+
+      max-width: 600px;
     }
+
+    .text-button {
+      background: #388e3c;
+
+      color: white;
+
+      width: 80%;
+
+      max-width: 600px;
+    }
+
+    .help-button {
+      background: #b00020;
+
+      color: white;
+
+      width: 80%;
+
+      max-width: 600px;
+
+      font-size: 32px;
+    }
+
+    .settings-button {
+      background: #555;
+
+      color: white;
+
+      width: 80%;
+
+      max-width: 600px;
+    }
+
+    .section-title {
+      font-size: 30px;
+
+      margin-top: 30px;
+
+      margin-bottom: 5px;
+    }
+
+    #helpMessage {
+      display: none;
+
+      background: #2a0000;
+
+      border: 3px solid #ff4444;
+
+      border-radius: 20px;
+
+      padding: 25px;
+
+      margin: 20px auto;
+
+      max-width: 700px;
+
+      font-size: 25px;
+    }
+
+    #settingsPanel {
+      display: none;
+
+      background: #222;
+
+      border: 3px solid #777;
+
+      border-radius: 20px;
+
+      padding: 25px;
+
+      margin: 20px auto;
+
+      max-width: 700px;
+    }
+
+    #settingsPanel h2 {
+      font-size: 32px;
+    }
+
+    #settingsPanel label {
+      display: block;
+
+      font-size: 22px;
+
+      margin-top: 15px;
+    }
+
+    #settingsPanel input {
+      width: 90%;
+
+      padding: 15px;
+
+      margin-top: 8px;
+
+      border-radius: 10px;
+
+      border: none;
+
+      font-size: 20px;
+    }
+
+    .save-button {
+      background: #1976d2;
+
+      color: white;
+    }
+
+    .close-button {
+      background: #555;
+
+      color: white;
+    }
+
+    #savedMessage {
+      font-size: 20px;
+
+      margin-top: 15px;
+
+      min-height: 25px;
+    }
+
   </style>
 </head>
 
+
 <body>
+
 
 <main class="app">
 
+
   <h1>🎙️ Grandpa Assistant</h1>
 
-  <div id="clock">--:--</div>
 
-  <div id="status">Ready</div>
+  <div id="clock">
+    --:--
+  </div>
+
+
+  <div id="status">
+    Ready
+  </div>
+
 
   <div id="heard">
     Press the microphone and talk.
   </div>
 
-  <button id="listenButton" onclick="startListening()">
+
+  <button
+    id="listenButton"
+    onclick="startListening()"
+  >
     🎤 TALK TO ME
   </button>
+
 
   <div id="weather">
     🌤️ Loading weather...
   </div>
 
+
   <div id="timer"></div>
 
-  <button class="small-button" onclick="sayTime()">
+
+  <button
+    class="small-button"
+    onclick="sayTime()"
+  >
     🕐 What time is it?
   </button>
 
-  <button class="small-button" onclick="getWeather()">
+
+  <button
+    class="small-button"
+    onclick="getWeather(true)"
+  >
     🌤️ Weather
   </button>
 
-  <button class="small-button" onclick="sayHello()">
+
+  <button
+    class="small-button"
+    onclick="sayHello()"
+  >
     👋 Hello
   </button>
 
+
+  <!-- FAMILY -->
+
+
+  <div class="section-title">
+    👩 Family
+  </div>
+
+
+  <button
+    class="contact-button"
+    onclick="callHelen()"
+  >
+    📞 Call Helen Williams
+  </button>
+
+
+  <button
+    class="text-button"
+    onclick="textHelen()"
+  >
+    💬 Text Helen Williams
+  </button>
+
+
+  <!-- HELP -->
+
+
+  <div class="section-title">
+    🆘 Need Help?
+  </div>
+
+
+  <button
+    class="help-button"
+    onclick="showHelp()"
+  >
+    🆘 I NEED HELP
+  </button>
+
+
+  <div id="helpMessage">
+
+    <strong>
+      Do you need help?
+    </strong>
+
+    <br><br>
+
+    You can contact Helen Williams
+    or another trusted family member.
+
+    <br><br>
+
+    <button onclick="callHelen()">
+      📞 Call Helen
+    </button>
+
+    <button onclick="textHelen()">
+      💬 Text Helen
+    </button>
+
+    <button
+      class="close-button"
+      onclick="closeHelp()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+
+  <!-- SETTINGS -->
+
+
+  <div class="section-title">
+    ⚙️ Settings
+  </div>
+
+
+  <button
+    class="settings-button"
+    onclick="showSettings()"
+  >
+    ⚙️ Contact Settings
+  </button>
+
+
+  <div id="settingsPanel">
+
+    <h2>
+      ⚙️ Contact Settings
+    </h2>
+
+
+    <label>
+      Helen Williams' phone number
+    </label>
+
+
+    <input
+      id="helenPhoneInput"
+      type="tel"
+      placeholder="Example: 5755551234"
+    >
+
+
+    <br>
+
+
+    <button
+      class="save-button"
+      onclick="saveSettings()"
+    >
+      💾 Save
+    </button>
+
+
+    <button
+      class="close-button"
+      onclick="closeSettings()"
+    >
+      Cancel
+    </button>
+
+
+    <div id="savedMessage"></div>
+
+
+  </div>
+
+
 </main>
+
 
 <script>
 
-  // =========================
+
+  // =====================================================
   // TEXT TO SPEECH
-  // =========================
+  // =====================================================
+
 
   function speak(text) {
 
     window.speechSynthesis.cancel();
 
-    const speech = new SpeechSynthesisUtterance(text);
+
+    const speech =
+      new SpeechSynthesisUtterance(text);
+
 
     speech.rate = 0.9;
+
     speech.pitch = 1;
 
+
     window.speechSynthesis.speak(speech);
+
 
     document.getElementById("status").textContent =
       "🔊 Speaking...";
 
+
     speech.onend = function() {
+
       document.getElementById("status").textContent =
         "Ready";
+
     };
+
   }
 
 
-  // =========================
+  // =====================================================
   // CLOCK
-  // =========================
+  // =====================================================
+
 
   function updateClock() {
 
     const now = new Date();
 
-    const time = now.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit"
-    });
 
-    document.getElementById("clock").textContent = time;
+    const time =
+      now.toLocaleTimeString([], {
+
+        hour: "numeric",
+
+        minute: "2-digit"
+
+      });
+
+
+    document.getElementById("clock").textContent =
+      time;
+
   }
 
+
   setInterval(updateClock, 1000);
+
   updateClock();
 
 
-  // =========================
+  // =====================================================
   // HELLO
-  // =========================
+  // =====================================================
+
 
   function sayHello() {
-    speak("Hello! How can I help you?");
+
+    speak(
+      "Hello! How can I help you?"
+    );
+
   }
 
 
-  // =========================
+  // =====================================================
   // TIME
-  // =========================
+  // =====================================================
+
 
   function sayTime() {
 
     const now = new Date();
 
-    const time = now.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit"
-    });
 
-    speak("The time is " + time);
+    const time =
+      now.toLocaleTimeString([], {
+
+        hour: "numeric",
+
+        minute: "2-digit"
+
+      });
+
+
+    speak(
+      "The time is " + time
+    );
+
   }
 
 
-  // =========================
+  // =====================================================
   // WEATHER
-  // Artesia, New Mexico
-  // =========================
+  // ARTESIA, NEW MEXICO
+  // =====================================================
 
-  async function getWeather(speakWeather = false) {
+
+  async function getWeather(
+    speakWeather = false
+  ) {
+
 
     const weatherBox =
       document.getElementById("weather");
 
+
     weatherBox.textContent =
       "🌤️ Getting Artesia weather...";
 
+
     try {
 
-      // Artesia, New Mexico coordinates
+
       const latitude = 32.8423;
+
       const longitude = -104.4406;
 
+
       const url =
+
         "https://api.open-meteo.com/v1/forecast" +
-        "?latitude=" + latitude +
-        "&longitude=" + longitude +
+
+        "?latitude=" +
+        latitude +
+
+        "&longitude=" +
+        longitude +
+
         "&current=temperature_2m,weather_code,wind_speed_10m" +
+
         "&temperature_unit=fahrenheit" +
+
         "&wind_speed_unit=mph";
 
-      const response = await fetch(url);
 
-      const data = await response.json();
+      const response =
+        await fetch(url);
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Weather request failed"
+        );
+
+      }
+
+
+      const data =
+        await response.json();
+
 
       const temperature =
-        Math.round(data.current.temperature_2m);
+        Math.round(
+          data.current.temperature_2m
+        );
+
 
       const wind =
-        Math.round(data.current.wind_speed_10m);
+        Math.round(
+          data.current.wind_speed_10m
+        );
+
 
       const description =
         getWeatherDescription(
           data.current.weather_code
         );
 
+
       weatherBox.innerHTML =
-        "🌤️ <strong>Artesia, New Mexico</strong><br>" +
-        temperature + "°F — " +
+
+        "🌤️ <strong>" +
+        "Artesia, New Mexico" +
+        "</strong><br>" +
+
+        temperature +
+        "°F — " +
+
         description +
+
         "<br>💨 Wind: " +
-        wind + " mph";
+
+        wind +
+
+        " mph";
+
 
       if (speakWeather) {
 
         speak(
+
           "In Artesia, New Mexico, " +
-          "it is " + temperature +
+
+          "it is " +
+
+          temperature +
+
           " degrees Fahrenheit and " +
-          description + "."
+
+          description +
+
+          "."
+
         );
+
       }
 
+
     } catch (error) {
+
+
+      console.error(error);
+
 
       weatherBox.textContent =
         "❌ Couldn't get the weather.";
 
+
       if (speakWeather) {
+
         speak(
           "Sorry, I couldn't get the weather right now."
         );
+
       }
+
     }
+
   }
 
 
   function getWeatherDescription(code) {
 
+
     if (code === 0)
       return "clear skies";
+
 
     if (code === 1 || code === 2)
       return "partly cloudy";
 
+
     if (code === 3)
       return "cloudy";
+
 
     if (code >= 45 && code <= 48)
       return "foggy";
 
+
     if (code >= 51 && code <= 67)
       return "rain";
+
 
     if (code >= 71 && code <= 77)
       return "snow";
 
+
     if (code >= 80 && code <= 82)
       return "rain showers";
+
 
     if (code >= 95)
       return "thunderstorms";
 
+
     return "unknown conditions";
+
   }
+
 
   getWeather();
 
 
-  // =========================
+  // =====================================================
   // TIMER
-  // =========================
+  // =====================================================
+
+
+  let timerInterval = null;
+
 
   function setTimer(minutes) {
 
+
     if (!minutes || minutes <= 0) {
-      speak("Please tell me how many minutes.");
+
+      speak(
+        "Please tell me how many minutes."
+      );
+
       return;
+
     }
+
 
     const timerBox =
       document.getElementById("timer");
 
-    let seconds = Math.round(minutes * 60);
+
+    if (timerInterval) {
+
+      clearInterval(timerInterval);
+
+    }
+
+
+    let seconds =
+      Math.round(minutes * 60);
+
 
     speak(
+
       "Okay. Timer set for " +
+
       minutes +
-      (minutes === 1 ? " minute." : " minutes.")
+
+      (
+        minutes === 1
+          ? " minute."
+          : " minutes."
+      )
+
     );
 
+
     function updateTimer() {
+
 
       const mins =
         Math.floor(seconds / 60);
 
+
       const secs =
         seconds % 60;
 
+
       timerBox.textContent =
+
         "⏰ Timer: " +
+
         mins +
+
         ":" +
-        String(secs).padStart(2, "0");
+
+        String(secs).padStart(
+          2,
+          "0"
+        );
+
 
       if (seconds <= 0) {
 
-        clearInterval(timerInterval);
+
+        clearInterval(
+          timerInterval
+        );
+
+
+        timerInterval = null;
+
 
         timerBox.textContent =
           "🔔 TIMER FINISHED!";
+
 
         speak(
           "Your timer is finished."
         );
 
+
         return;
+
       }
 
+
       seconds--;
+
     }
+
 
     updateTimer();
 
-    const timerInterval =
-      setInterval(updateTimer, 1000);
+
+    timerInterval =
+      setInterval(
+        updateTimer,
+        1000
+      );
+
   }
 
 
-  // =========================
+  // =====================================================
+  // LOCAL CONTACT STORAGE
+  // =====================================================
+
+
+  function getHelenPhone() {
+
+    return localStorage.getItem(
+      "helenPhone"
+    ) || "";
+
+  }
+
+
+  // =====================================================
+  // SETTINGS
+  // =====================================================
+
+
+  function showSettings() {
+
+
+    const panel =
+      document.getElementById(
+        "settingsPanel"
+      );
+
+
+    panel.style.display =
+      "block";
+
+
+    document.getElementById(
+      "helenPhoneInput"
+    ).value =
+      getHelenPhone();
+
+
+    document.getElementById(
+      "savedMessage"
+    ).textContent = "";
+
+  }
+
+
+  function closeSettings() {
+
+
+    document.getElementById(
+      "settingsPanel"
+    ).style.display =
+      "none";
+
+  }
+
+
+  function saveSettings() {
+
+
+    const phone =
+      document.getElementById(
+        "helenPhoneInput"
+      ).value.trim();
+
+
+    if (!phone) {
+
+
+      alert(
+        "Please enter Helen's phone number."
+      );
+
+
+      return;
+
+    }
+
+
+    localStorage.setItem(
+      "helenPhone",
+      phone
+    );
+
+
+    document.getElementById(
+      "savedMessage"
+    ).textContent =
+      "✅ Phone number saved on this computer.";
+
+
+    speak(
+      "Helen's phone number has been saved."
+    );
+
+  }
+
+
+  // =====================================================
+  // CALL HELEN
+  // =====================================================
+
+
+  function callHelen() {
+
+
+    const phone =
+      getHelenPhone();
+
+
+    if (!phone) {
+
+
+      alert(
+
+        "Helen's phone number isn't configured yet.\n\n" +
+
+        "Open Contact Settings and enter her number."
+
+      );
+
+
+      speak(
+        "Helen's phone number hasn't been configured yet."
+      );
+
+
+      return;
+
+    }
+
+
+    const confirmed =
+      confirm(
+        "Call Helen Williams?"
+      );
+
+
+    if (!confirmed) {
+
+      return;
+
+    }
+
+
+    speak(
+      "Opening the call to Helen Williams."
+    );
+
+
+    setTimeout(
+      function() {
+
+        window.location.href =
+          "tel:" + phone;
+
+      },
+      800
+    );
+
+  }
+
+
+  // =====================================================
+  // TEXT HELEN
+  // =====================================================
+
+
+  function textHelen() {
+
+
+    const phone =
+      getHelenPhone();
+
+
+    if (!phone) {
+
+
+      alert(
+
+        "Helen's phone number isn't configured yet.\n\n" +
+
+        "Open Contact Settings and enter her number."
+
+      );
+
+
+      speak(
+        "Helen's phone number hasn't been configured yet."
+      );
+
+
+      return;
+
+    }
+
+
+    const confirmed =
+      confirm(
+        "Open a text message to Helen Williams?"
+      );
+
+
+    if (!confirmed) {
+
+      return;
+
+    }
+
+
+    speak(
+      "Opening a text message to Helen Williams."
+    );
+
+
+    setTimeout(
+      function() {
+
+        window.location.href =
+          "sms:" + phone;
+
+      },
+      800
+    );
+
+  }
+
+
+  // =====================================================
+  // HELP
+  // =====================================================
+
+
+  function showHelp() {
+
+
+    document.getElementById(
+      "helpMessage"
+    ).style.display =
+      "block";
+
+
+    speak(
+
+      "You selected help. " +
+
+      "You can call Helen Williams " +
+
+      "if you need assistance."
+
+    );
+
+  }
+
+
+  function closeHelp() {
+
+
+    document.getElementById(
+      "helpMessage"
+    ).style.display =
+      "none";
+
+
+    speak(
+      "Help screen closed."
+    );
+
+  }
+
+
+  // =====================================================
   // SPEECH RECOGNITION
-  // =========================
+  // =====================================================
+
 
   const SpeechRecognition =
+
     window.SpeechRecognition ||
+
     window.webkitSpeechRecognition;
+
 
   let recognition;
 
+
   if (SpeechRecognition) {
 
-    recognition = new SpeechRecognition();
 
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = "en-US";
+    recognition =
+      new SpeechRecognition();
 
-    recognition.onstart = function() {
 
-      document.getElementById("status").textContent =
-        "🎤 Listening...";
-    };
+    recognition.continuous =
+      false;
 
-    recognition.onresult = function(event) {
 
-      const text =
-        event.results[0][0].transcript;
+    recognition.interimResults =
+      false;
 
-      document.getElementById("heard").textContent =
-        "You said: " + text;
 
-      document.getElementById("status").textContent =
-        "🧠 Thinking...";
+    recognition.lang =
+      "en-US";
 
-      handleCommand(text);
-    };
 
-    recognition.onerror = function(event) {
+    recognition.onstart =
+      function() {
 
-      document.getElementById("status").textContent =
-        "❌ Microphone error";
 
-      console.log(event.error);
-    };
+        document.getElementById(
+          "status"
+        ).textContent =
+          "🎤 Listening...";
 
-  } else {
+      };
 
-    document.getElementById("status").textContent =
+
+    recognition.onresult =
+      function(event) {
+
+
+        const text =
+          event.results[0][0].transcript;
+
+
+        document.getElementById(
+          "heard"
+        ).textContent =
+          "You said: " + text;
+
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          "🧠 Thinking...";
+
+
+        handleCommand(text);
+
+      };
+
+
+    recognition.onerror =
+      function(event) {
+
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          "❌ Microphone error";
+
+
+        console.log(
+          "Speech recognition error:",
+          event.error
+        );
+
+      };
+
+
+    recognition.onend =
+      function() {
+
+
+        if (
+
+          document.getElementById(
+            "status"
+          ).textContent ===
+          "🎤 Listening..."
+
+        ) {
+
+
+          document.getElementById(
+            "status"
+          ).textContent =
+            "Ready";
+
+        }
+
+      };
+
+  }
+
+
+  else {
+
+
+    document.getElementById(
+      "status"
+    ).textContent =
       "Speech recognition isn't supported.";
+
   }
 
 
   function startListening() {
 
+
     if (!recognition) {
 
+
       speak(
+
         "Sorry, your browser doesn't support voice recognition."
+
       );
 
+
       return;
+
     }
 
-    recognition.start();
+
+    try {
+
+
+      recognition.start();
+
+
+    }
+
+
+    catch (error) {
+
+
+      console.log(
+        "Recognition could not start:",
+        error
+      );
+
+    }
+
   }
 
 
-  // =========================
+  // =====================================================
   // COMMAND PROCESSING
-  // =========================
+  // =====================================================
+
 
   function handleCommand(command) {
+
 
     const text =
       command.toLowerCase();
@@ -444,125 +1313,246 @@
 
     // WEATHER
 
+
     if (
+
       text.includes("weather") ||
+
       text.includes("temperature") ||
+
       text.includes("outside")
+
     ) {
+
 
       getWeather(true);
 
+
       return;
+
     }
 
 
     // TIME
 
+
     if (
+
       text.includes("what time") ||
+
       text.includes("time is it")
+
     ) {
+
 
       sayTime();
 
+
       return;
+
     }
 
 
     // HELLO
 
+
     if (
+
       text.includes("hello") ||
+
       text.includes("hi")
+
     ) {
+
 
       sayHello();
 
+
       return;
+
     }
 
 
-    // YOUTUBE
+    // CALL HELEN
 
-    if (text.includes("youtube")) {
-
-      speak("Opening YouTube.");
-
-      setTimeout(function() {
-
-        window.open(
-          "https://www.youtube.com/",
-          "_blank"
-        );
-
-      }, 1000);
-
-      return;
-    }
-
-
-    // GOOGLE
-
-    if (text.includes("google")) {
-
-      speak("Opening Google.");
-
-      setTimeout(function() {
-
-        window.open(
-          "https://www.google.com/",
-          "_blank"
-        );
-
-      }, 1000);
-
-      return;
-    }
-
-
-    // TIMER
-
-    const timerMatch =
-      text.match(
-        /(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/
-      );
 
     if (
-      text.includes("timer") &&
-      timerMatch
+
+      text.includes("call helen") ||
+
+      text.includes("call helen williams")
+
     ) {
 
-      const minutes =
-        parseFloat(timerMatch[1]);
 
-      setTimer(minutes);
+      callHelen();
+
 
       return;
+
+    }
+
+
+    // TEXT HELEN
+
+
+    if (
+
+      text.includes("text helen") ||
+
+      text.includes("message helen")
+
+    ) {
+
+
+      textHelen();
+
+
+      return;
+
     }
 
 
     // HELP
 
-    if (text.includes("help")) {
 
-      speak(
-        "I'm here. Please contact your family if you need assistance."
-      );
+    if (
+
+      text.includes("help") ||
+
+      text.includes("i need help")
+
+    ) {
+
+
+      showHelp();
+
 
       return;
+
+    }
+
+
+    // YOUTUBE
+
+
+    if (
+      text.includes("youtube")
+    ) {
+
+
+      speak(
+        "Opening YouTube."
+      );
+
+
+      setTimeout(
+        function() {
+
+
+          window.open(
+            "https://www.youtube.com/",
+            "_blank"
+          );
+
+
+        },
+        1000
+      );
+
+
+      return;
+
+    }
+
+
+    // GOOGLE
+
+
+    if (
+      text.includes("google")
+    ) {
+
+
+      speak(
+        "Opening Google."
+      );
+
+
+      setTimeout(
+        function() {
+
+
+          window.open(
+            "https://www.google.com/",
+            "_blank"
+          );
+
+
+        },
+        1000
+      );
+
+
+      return;
+
+    }
+
+
+    // TIMER
+
+
+    const timerMatch =
+
+      text.match(
+
+        /(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/
+
+      );
+
+
+    if (
+
+      text.includes("timer") &&
+
+      timerMatch
+
+    ) {
+
+
+      const minutes =
+
+        parseFloat(
+          timerMatch[1]
+        );
+
+
+      setTimer(minutes);
+
+
+      return;
+
     }
 
 
     // UNKNOWN
 
+
     speak(
+
       "I heard you say " +
+
       command +
+
       ". I don't know how to do that yet."
+
     );
+
   }
 
+
 </script>
+
 
 </body>
 </html>
