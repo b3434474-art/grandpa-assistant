@@ -1,96 +1,67 @@
 /* Grandpa Assistant AI
-   Uses Puter.js so no API key is stored in this repository.
+   Puter.js provides the AI connection without putting a private API key in this repo.
 */
 
 let aiConversation = [];
-
-function addAIMessage(role, content) {
-  aiConversation.push({ role, content });
-  if (aiConversation.length > 12) {
-    aiConversation = aiConversation.slice(-12);
-  }
-}
 
 async function askGrandpaAI(question) {
   const status = document.getElementById("status");
   const heard = document.getElementById("heard");
 
-  if (!question || !question.trim()) {
+  question = String(question || "").trim();
+  if (!question) {
     speak("What would you like to ask me?");
     return;
   }
 
-  const cleanQuestion = question.trim();
-  heard.textContent = "You said: " + cleanQuestion;
+  heard.textContent = "You said: " + question;
   status.textContent = "🧠 Thinking...";
 
-  addAIMessage("user", cleanQuestion);
+  aiConversation.push({ role: "user", content: question });
+  if (aiConversation.length > 10) aiConversation = aiConversation.slice(-10);
 
   try {
+    if (!window.puter || !puter.ai || !puter.ai.chat) {
+      throw new Error("Puter AI is not available");
+    }
+
     const response = await puter.ai.chat([
       {
         role: "system",
         content:
-          "You are Grandpa Assistant, a friendly, patient voice assistant for an older adult. " +
-          "Give clear, useful answers in plain language. Keep answers reasonably short because they will be spoken aloud. " +
-          "Never pretend to have called emergency services or contacted a person unless the website actually did so."
+          "You are Grandpa Assistant, a friendly and patient voice assistant. " +
+          "Answer questions clearly and accurately in plain language. " +
+          "Keep spoken answers fairly short unless the user asks for detail. " +
+          "Do not claim that you called emergency services, contacted family, or performed an action unless the website actually did it."
       },
       ...aiConversation
     ]);
 
-    let answer = "Sorry, I couldn't think of an answer right now.";
+    let answer = "Sorry, I couldn't get an answer right now.";
 
     if (typeof response === "string") {
       answer = response;
-    } else if (response && response.message && response.message.content) {
+    } else if (response?.message?.content) {
       answer = response.message.content;
-    } else if (response && response.content) {
+    } else if (response?.content) {
       answer = response.content;
     }
 
     if (Array.isArray(answer)) {
-      answer = answer.map(part => part.text || "").join(" ");
+      answer = answer.map(part => part?.text || "").join(" ");
     }
 
-    answer = String(answer).trim();
-
-    addAIMessage("assistant", answer);
+    answer = String(answer).trim() || "Sorry, I didn't get an answer.";
+    aiConversation.push({ role: "assistant", content: answer });
     speak(answer);
-
   } catch (error) {
-    console.error("AI error:", error);
-    status.textContent = "❌ AI connection error";
+    console.error("Grandpa Assistant AI error:", error);
+    status.textContent = "❌ AI unavailable";
     speak("Sorry, I couldn't connect to the AI right now.");
   }
 }
 
 function openAIChat() {
   const question = prompt("What would you like to ask Grandpa Assistant?");
-  if (question) {
-    askGrandpaAI(question);
-  }
-}
-
-function handleAICommand(text) {
-  const lower = text.toLowerCase().trim();
-
-  const aiTriggers = [
-    "ask ai",
-    "ask the ai",
-    "ask assistant",
-    "tell me about",
-    "explain",
-    "who is",
-    "what is",
-    "why is",
-    "how does",
-    "can you tell me"
-  ];
-
-  if (aiTriggers.some(trigger => lower.startsWith(trigger))) {
-    askGrandpaAI(text);
-    return true;
-  }
-
-  return false;
+  if (question) askGrandpaAI(question);
 }
