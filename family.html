@@ -11,9 +11,10 @@ import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+e
 const SUPABASE_URL='https://twayyjlwxjrvqmgjesft.supabase.co';
 const SUPABASE_KEY='sb_publishable_bACY_1Ia2EwfG3430KHTfw_-gvzqRq2';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);let currentUser=null,channel=null,mediaRecorder=null,chunks=[];const $=id=>document.getElementById(id);
+const SITE_URL='https://b3434474-art.github.io/grandpa-assistant/';
 function status(text,good=true){$('connection').textContent=text;$('onlineDot').textContent=good?'🟢':'🔴'}
 async function init(){const{data:{session}}=await supabase.auth.getSession();if(session)showChat(session.user);supabase.auth.onAuthStateChange((event,session)=>{if(session)showChat(session.user);else showLogin()})}
-window.signIn=async()=>{const email=$('email').value.trim();if(!email)return $('authStatus').textContent='Enter an email address.';$('authStatus').textContent='Sending sign-in link...';const{error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});$('authStatus').textContent=error?'Could not send the link: '+error.message:'✅ Check your email for the sign-in link.'};
+window.signIn=async()=>{const email=$('email').value.trim();if(!email)return $('authStatus').textContent='Enter an email address.';$('authStatus').textContent='Sending sign-in link...';const{error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:SITE_URL+'family.html'}});$('authStatus').textContent=error?'Could not send the link: '+error.message:'✅ Check your email for the sign-in link.'};
 async function showChat(user){currentUser=user;$('authCard').classList.add('hidden');$('chatCard').classList.remove('hidden');$('messagesCard').classList.remove('hidden');$('signedInAs').textContent='Signed in as '+user.email;$('nameInput').value=localStorage.getItem('grandpaChatName')||'';await loadMessages();subscribeRealtime()}
 function showLogin(){currentUser=null;$('authCard').classList.remove('hidden');$('chatCard').classList.add('hidden');$('messagesCard').classList.add('hidden');if(channel){supabase.removeChannel(channel);channel=null}}
 window.signOutUser=async()=>{await supabase.auth.signOut()};window.saveName=()=>{const n=$('nameInput').value.trim();if(n)localStorage.setItem('grandpaChatName',n);else alert('Enter a display name.')};
