@@ -307,11 +307,17 @@ button:hover {
   👋 Hello
 </button>
 
+
+<!-- FAMILY -->
+
 <div class="section-title">
   👨‍👩‍👧 Family
 </div>
 
 <div id="contacts"></div>
+
+
+<!-- SETTINGS -->
 
 <div class="section-title">
   ⚙️ Settings
@@ -364,6 +370,9 @@ button:hover {
 
 </div>
 
+
+<!-- HELP -->
+
 <div class="section-title">
   🆘 Need Help?
 </div>
@@ -395,17 +404,23 @@ button:hover {
 
 </div>
 
-</main>
 
 <script>
 
 /* =====================================================
-   SETTINGS
+   GLOBAL VARIABLES
 ===================================================== */
 
 let microphoneEnabled = true;
+
 let wakeMode = false;
+
 let listeningForCommand = false;
+
+let assistantIsSpeaking = false;
+
+let recognition = null;
+
 let timerInterval = null;
 
 
@@ -414,6 +429,25 @@ let timerInterval = null;
 ===================================================== */
 
 function speak(text) {
+
+  /*
+    IMPORTANT:
+    Stop the microphone BEFORE the assistant talks.
+    This prevents the assistant from hearing itself.
+  */
+
+  assistantIsSpeaking = true;
+
+  if (recognition) {
+
+    try {
+      recognition.stop();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  listeningForCommand = false;
 
   window.speechSynthesis.cancel();
 
@@ -427,6 +461,43 @@ function speak(text) {
     "🔊 Speaking...";
 
   speech.onend = function() {
+
+    assistantIsSpeaking = false;
+
+    document.getElementById("status").textContent =
+      "Ready";
+
+    /*
+      Give the microphone a moment before
+      listening again.
+    */
+
+    if (
+      wakeMode &&
+      microphoneEnabled
+    ) {
+
+      setTimeout(function() {
+
+        if (
+          !assistantIsSpeaking &&
+          wakeMode &&
+          microphoneEnabled
+        ) {
+
+          listenForWakeWord();
+
+        }
+
+      }, 1200);
+
+    }
+
+  };
+
+  speech.onerror = function() {
+
+    assistantIsSpeaking = false;
 
     document.getElementById("status").textContent =
       "Ready";
@@ -456,6 +527,7 @@ function updateClock() {
 }
 
 setInterval(updateClock, 1000);
+
 updateClock();
 
 
@@ -473,7 +545,9 @@ function sayTime() {
       minute: "2-digit"
     });
 
-  speak("The time is " + time);
+  speak(
+    "The time is " + time
+  );
 }
 
 
@@ -483,7 +557,9 @@ function sayTime() {
 
 function sayHello() {
 
-  speak("Hello! How can I help you?");
+  speak(
+    "Hello! How can I help you?"
+  );
 }
 
 
@@ -502,6 +578,7 @@ async function getWeather(speakWeather = false) {
   try {
 
     const latitude = 32.8423;
+
     const longitude = -104.4406;
 
     const url =
@@ -523,10 +600,14 @@ async function getWeather(speakWeather = false) {
       await response.json();
 
     const temperature =
-      Math.round(data.current.temperature_2m);
+      Math.round(
+        data.current.temperature_2m
+      );
 
     const wind =
-      Math.round(data.current.wind_speed_10m);
+      Math.round(
+        data.current.wind_speed_10m
+      );
 
     const description =
       getWeatherDescription(
@@ -551,6 +632,7 @@ async function getWeather(speakWeather = false) {
         description +
         "."
       );
+
     }
 
   } catch (error) {
@@ -565,7 +647,9 @@ async function getWeather(speakWeather = false) {
       speak(
         "Sorry, I couldn't get the weather right now."
       );
+
     }
+
   }
 }
 
@@ -608,7 +692,10 @@ getWeather();
 
 function setTimer(minutes) {
 
-  if (!minutes || minutes <= 0) {
+  if (
+    !minutes ||
+    minutes <= 0
+  ) {
 
     speak(
       "Please tell me how many minutes."
@@ -618,25 +705,38 @@ function setTimer(minutes) {
   }
 
   if (timerInterval) {
-    clearInterval(timerInterval);
+
+    clearInterval(
+      timerInterval
+    );
+
   }
 
   const timerBox =
     document.getElementById("timer");
 
   let seconds =
-    Math.round(minutes * 60);
+    Math.round(
+      minutes * 60
+    );
 
   speak(
     "Okay. Timer set for " +
     minutes +
-    (minutes === 1 ? " minute." : " minutes.")
+    (
+      minutes === 1
+        ? " minute."
+        : " minutes."
+    )
   );
+
 
   function updateTimer() {
 
     const mins =
-      Math.floor(seconds / 60);
+      Math.floor(
+        seconds / 60
+      );
 
     const secs =
       seconds % 60;
@@ -645,11 +745,18 @@ function setTimer(minutes) {
       "⏰ Timer: " +
       mins +
       ":" +
-      String(secs).padStart(2, "0");
+      String(secs).padStart(
+        2,
+        "0"
+      );
+
 
     if (seconds <= 0) {
 
-      clearInterval(timerInterval);
+      clearInterval(
+        timerInterval
+      );
+
       timerInterval = null;
 
       timerBox.textContent =
@@ -663,17 +770,22 @@ function setTimer(minutes) {
     }
 
     seconds--;
+
   }
+
 
   updateTimer();
 
   timerInterval =
-    setInterval(updateTimer, 1000);
+    setInterval(
+      updateTimer,
+      1000
+    );
 }
 
 
 /* =====================================================
-   CONTACTS
+   CONTACT STORAGE
 ===================================================== */
 
 function getContacts() {
@@ -681,12 +793,15 @@ function getContacts() {
   try {
 
     return JSON.parse(
-      localStorage.getItem("grandpaContacts")
+      localStorage.getItem(
+        "grandpaContacts"
+      )
     ) || [];
 
   } catch (error) {
 
     return [];
+
   }
 }
 
@@ -695,22 +810,31 @@ function saveContacts(contacts) {
 
   localStorage.setItem(
     "grandpaContacts",
-    JSON.stringify(contacts)
+    JSON.stringify(
+      contacts
+    )
   );
 
   displayContacts();
 }
 
 
+/* =====================================================
+   DISPLAY CONTACTS
+===================================================== */
+
 function displayContacts() {
 
   const contactsBox =
-    document.getElementById("contacts");
+    document.getElementById(
+      "contacts"
+    );
 
   const contacts =
     getContacts();
 
   contactsBox.innerHTML = "";
+
 
   if (contacts.length === 0) {
 
@@ -722,81 +846,115 @@ function displayContacts() {
     return;
   }
 
-  contacts.forEach(function(contact, index) {
 
-    const div =
-      document.createElement("div");
+  contacts.forEach(
+    function(contact, index) {
 
-    div.className = "contact";
+      const div =
+        document.createElement(
+          "div"
+        );
 
-    const name =
-      document.createElement("div");
-
-    name.className = "contact-name";
-
-    name.textContent =
-      "👤 " + contact.name;
-
-    div.appendChild(name);
+      div.className =
+        "contact";
 
 
-    const callButton =
-      document.createElement("button");
+      const name =
+        document.createElement(
+          "div"
+        );
 
-    callButton.className =
-      "call-button";
+      name.className =
+        "contact-name";
 
-    callButton.textContent =
-      "📞 Call";
+      name.textContent =
+        "👤 " +
+        contact.name;
 
-    callButton.onclick =
-      function() {
-        callContact(index);
-      };
-
-    div.appendChild(callButton);
+      div.appendChild(name);
 
 
-    const textButton =
-      document.createElement("button");
+      const callButton =
+        document.createElement(
+          "button"
+        );
 
-    textButton.className =
-      "text-button";
+      callButton.className =
+        "call-button";
 
-    textButton.textContent =
-      "💬 Text";
+      callButton.textContent =
+        "📞 Call";
 
-    textButton.onclick =
-      function() {
-        textContact(index);
-      };
+      callButton.onclick =
+        function() {
 
-    div.appendChild(textButton);
+          callContact(index);
+
+        };
+
+      div.appendChild(
+        callButton
+      );
 
 
-    const deleteButton =
-      document.createElement("button");
+      const textButton =
+        document.createElement(
+          "button"
+        );
 
-    deleteButton.className =
-      "delete-button";
+      textButton.className =
+        "text-button";
 
-    deleteButton.textContent =
-      "🗑️ Remove";
+      textButton.textContent =
+        "💬 Text";
 
-    deleteButton.onclick =
-      function() {
-        deleteContact(index);
-      };
+      textButton.onclick =
+        function() {
 
-    div.appendChild(
-      document.createElement("br")
-    );
+          textContact(index);
 
-    div.appendChild(deleteButton);
+        };
 
-    contactsBox.appendChild(div);
+      div.appendChild(
+        textButton
+      );
 
-  });
+
+      const deleteButton =
+        document.createElement(
+          "button"
+        );
+
+      deleteButton.className =
+        "delete-button";
+
+      deleteButton.textContent =
+        "🗑️ Remove";
+
+      deleteButton.onclick =
+        function() {
+
+          deleteContact(index);
+
+        };
+
+
+      div.appendChild(
+        document.createElement(
+          "br"
+        )
+      );
+
+      div.appendChild(
+        deleteButton
+      );
+
+      contactsBox.appendChild(
+        div
+      );
+
+    }
+  );
 }
 
 
@@ -807,14 +965,20 @@ function displayContacts() {
 function addContact() {
 
   const name =
-    document.getElementById("contactName")
-      .value.trim();
+    document.getElementById(
+      "contactName"
+    ).value.trim();
 
   const phone =
-    document.getElementById("contactPhone")
-      .value.trim();
+    document.getElementById(
+      "contactPhone"
+    ).value.trim();
 
-  if (!name || !phone) {
+
+  if (
+    !name ||
+    !phone
+  ) {
 
     alert(
       "Please enter both a name and phone number."
@@ -823,21 +987,37 @@ function addContact() {
     return;
   }
 
+
   const contacts =
     getContacts();
+
 
   contacts.push({
     name: name,
     phone: phone
   });
 
-  saveContacts(contacts);
 
-  document.getElementById("contactName").value = "";
-  document.getElementById("contactPhone").value = "";
+  saveContacts(
+    contacts
+  );
 
-  document.getElementById("savedMessage").textContent =
+
+  document.getElementById(
+    "contactName"
+  ).value = "";
+
+
+  document.getElementById(
+    "contactPhone"
+  ).value = "";
+
+
+  document.getElementById(
+    "savedMessage"
+  ).textContent =
     "✅ Contact added!";
+
 
   speak(
     name +
@@ -858,20 +1038,34 @@ function deleteContact(index) {
   const contact =
     contacts[index];
 
-  if (!contact) return;
 
-  if (
-    !confirm(
-      "Remove " + contact.name +
-      " from family contacts?"
-    )
-  ) {
+  if (!contact) {
     return;
   }
 
-  contacts.splice(index, 1);
 
-  saveContacts(contacts);
+  if (
+    !confirm(
+      "Remove " +
+      contact.name +
+      " from family contacts?"
+    )
+  ) {
+
+    return;
+  }
+
+
+  contacts.splice(
+    index,
+    1
+  );
+
+
+  saveContacts(
+    contacts
+  );
+
 
   speak(
     contact.name +
@@ -892,27 +1086,40 @@ function callContact(index) {
   const contact =
     contacts[index];
 
-  if (!contact) return;
+
+  if (!contact) {
+    return;
+  }
+
 
   if (
     !confirm(
-      "Call " + contact.name + "?"
+      "Call " +
+      contact.name +
+      "?"
     )
   ) {
+
     return;
   }
+
 
   speak(
     "Opening a call to " +
     contact.name
   );
 
-  setTimeout(function() {
 
-    window.location.href =
-      "tel:" + contact.phone;
+  setTimeout(
+    function() {
 
-  }, 800);
+      window.location.href =
+        "tel:" +
+        contact.phone;
+
+    },
+    1000
+  );
 }
 
 
@@ -928,28 +1135,40 @@ function textContact(index) {
   const contact =
     contacts[index];
 
-  if (!contact) return;
+
+  if (!contact) {
+    return;
+  }
+
 
   if (
     !confirm(
       "Open a text message to " +
-      contact.name + "?"
+      contact.name +
+      "?"
     )
   ) {
+
     return;
   }
+
 
   speak(
     "Opening a text message to " +
     contact.name
   );
 
-  setTimeout(function() {
 
-    window.location.href =
-      "sms:" + contact.phone;
+  setTimeout(
+    function() {
 
-  }, 800);
+      window.location.href =
+        "sms:" +
+        contact.phone;
+
+    },
+    1000
+  );
 }
 
 
@@ -961,6 +1180,7 @@ function findContactByCommand(text) {
 
   const contacts =
     getContacts();
+
 
   for (
     let i = 0;
@@ -975,8 +1195,11 @@ function findContactByCommand(text) {
     ) {
 
       return i;
+
     }
+
   }
+
 
   return -1;
 }
@@ -990,7 +1213,8 @@ function showSettings() {
 
   document.getElementById(
     "settingsPanel"
-  ).style.display = "block";
+  ).style.display =
+    "block";
 }
 
 
@@ -998,7 +1222,8 @@ function closeSettings() {
 
   document.getElementById(
     "settingsPanel"
-  ).style.display = "none";
+  ).style.display =
+    "none";
 }
 
 
@@ -1010,7 +1235,9 @@ function showHelp() {
 
   document.getElementById(
     "helpMessage"
-  ).style.display = "block";
+  ).style.display =
+    "block";
+
 
   speak(
     "You selected help. " +
@@ -1023,7 +1250,8 @@ function closeHelp() {
 
   document.getElementById(
     "helpMessage"
-  ).style.display = "none";
+  ).style.display =
+    "none";
 }
 
 
@@ -1036,15 +1264,21 @@ function toggleMicrophone() {
   microphoneEnabled =
     !microphoneEnabled;
 
+
   const button =
-    document.getElementById("micButton");
+    document.getElementById(
+      "micButton"
+    );
+
 
   if (microphoneEnabled) {
 
     button.textContent =
       "🔇 Microphone Control";
 
-    document.getElementById("status").textContent =
+    document.getElementById(
+      "status"
+    ).textContent =
       "Ready";
 
   } else {
@@ -1052,11 +1286,16 @@ function toggleMicrophone() {
     button.textContent =
       "🔴 MICROPHONE OFF";
 
-    document.getElementById("status").textContent =
+    document.getElementById(
+      "status"
+    ).textContent =
       "🔴 Microphone disabled";
 
+
     try {
+
       recognition.stop();
+
     } catch (error) {}
 
   }
@@ -1071,112 +1310,222 @@ const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
-let recognition = null;
-
 
 if (SpeechRecognition) {
 
   recognition =
     new SpeechRecognition();
 
-  recognition.continuous = false;
-  recognition.interimResults = false;
-  recognition.lang = "en-US";
+
+  recognition.continuous =
+    false;
 
 
-  recognition.onstart = function() {
-
-    if (listeningForCommand) {
-
-      document.getElementById("status").textContent =
-        "🎤 Listening for your command...";
-
-    } else {
-
-      document.getElementById("status").textContent =
-        '👂 Listening for "Hey Assistant"...';
-
-    }
-  };
+  recognition.interimResults =
+    false;
 
 
-  recognition.onresult = function(event) {
-
-    const text =
-      event.results[0][0].transcript.trim();
-
-    document.getElementById("heard").textContent =
-      "You said: " + text;
-
-    const lower =
-      text.toLowerCase();
+  recognition.lang =
+    "en-US";
 
 
-    /* WAKE WORD */
-
-    if (!listeningForCommand) {
+  recognition.onstart =
+    function() {
 
       if (
-        lower.includes("hey assistant") ||
-        lower.includes("hey computer")
+        assistantIsSpeaking
       ) {
 
-        listeningForCommand = true;
+        return;
 
-        speak(
-          "Yes? How can I help?"
-        );
-
-        setTimeout(function() {
-
-          startCommandListening();
-
-        }, 1000);
       }
 
-      return;
-    }
+
+      if (
+        listeningForCommand
+      ) {
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          "🎤 Listening for your command...";
+
+      } else {
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          '👂 Listening for "Hey Assistant"...';
+
+      }
+
+    };
 
 
-    /* COMMAND */
+  recognition.onresult =
+    function(event) {
 
-    listeningForCommand = false;
+      /*
+        Ignore anything accidentally captured
+        while the assistant is speaking.
+      */
 
-    document.getElementById("status").textContent =
-      "🧠 Thinking...";
+      if (
+        assistantIsSpeaking
+      ) {
 
-    handleCommand(text);
-  };
+        return;
 
-
-  recognition.onerror = function(event) {
-
-    console.log(
-      "Speech error:",
-      event.error
-    );
-
-    listeningForCommand = false;
-
-    document.getElementById("status").textContent =
-      "❌ Microphone error";
-  };
+      }
 
 
-  recognition.onend = function() {
+      const text =
+        event.results[0][0]
+          .transcript
+          .trim();
 
-    if (
-      wakeMode &&
-      microphoneEnabled &&
-      !listeningForCommand
-    ) {
 
-      setTimeout(
-        listenForWakeWord,
-        700
+      document.getElementById(
+        "heard"
+      ).textContent =
+        "You said: " +
+        text;
+
+
+      const lower =
+        text.toLowerCase();
+
+
+      /* ==========================
+         WAKE WORD
+      ========================== */
+
+      if (
+        !listeningForCommand
+      ) {
+
+        if (
+          lower.includes(
+            "hey assistant"
+          ) ||
+          lower.includes(
+            "hey computer"
+          )
+        ) {
+
+          listeningForCommand =
+            true;
+
+
+          speak(
+            "Yes? How can I help?"
+          );
+
+        }
+
+
+        return;
+      }
+
+
+      /* ==========================
+         COMMAND
+      ========================== */
+
+      listeningForCommand =
+        false;
+
+
+      document.getElementById(
+        "status"
+      ).textContent =
+        "🧠 Thinking...";
+
+
+      handleCommand(
+        text
       );
-    }
-  };
+
+    };
+
+
+  recognition.onerror =
+    function(event) {
+
+      console.log(
+        "Speech error:",
+        event.error
+      );
+
+
+      listeningForCommand =
+        false;
+
+
+      if (
+        !assistantIsSpeaking
+      ) {
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          "❌ Microphone error";
+
+      }
+
+    };
+
+
+  recognition.onend =
+    function() {
+
+      /*
+        NEVER restart the microphone
+        while the assistant is speaking.
+      */
+
+      if (
+        assistantIsSpeaking
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+        wakeMode &&
+        microphoneEnabled &&
+        !listeningForCommand
+      ) {
+
+        setTimeout(
+          function() {
+
+            if (
+              !assistantIsSpeaking &&
+              wakeMode &&
+              microphoneEnabled
+            ) {
+
+              listenForWakeWord();
+
+            }
+
+          },
+          1200
+        );
+
+      }
+
+    };
+
+} else {
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "❌ Voice recognition is not supported by this browser.";
 
 }
 
@@ -1187,7 +1536,9 @@ if (SpeechRecognition) {
 
 function startCommandListening() {
 
-  if (!microphoneEnabled) {
+  if (
+    !microphoneEnabled
+  ) {
 
     speak(
       "The microphone is turned off."
@@ -1196,7 +1547,10 @@ function startCommandListening() {
     return;
   }
 
-  if (!recognition) {
+
+  if (
+    !recognition
+  ) {
 
     speak(
       "Sorry, your browser does not support voice recognition."
@@ -1205,7 +1559,23 @@ function startCommandListening() {
     return;
   }
 
-  listeningForCommand = true;
+
+  /*
+    Make sure the assistant is not speaking.
+  */
+
+  if (
+    assistantIsSpeaking
+  ) {
+
+    return;
+
+  }
+
+
+  listeningForCommand =
+    true;
+
 
   try {
 
@@ -1213,13 +1583,18 @@ function startCommandListening() {
 
   } catch (error) {
 
-    console.log(error);
+    console.log(
+      "Recognition start error:",
+      error
+    );
+
   }
+
 }
 
 
 /* =====================================================
-   WAKE WORD
+   WAKE WORD LISTENING
 ===================================================== */
 
 function listenForWakeWord() {
@@ -1227,10 +1602,14 @@ function listenForWakeWord() {
   if (
     !wakeMode ||
     !microphoneEnabled ||
-    listeningForCommand
+    listeningForCommand ||
+    assistantIsSpeaking
   ) {
+
     return;
+
   }
+
 
   try {
 
@@ -1238,14 +1617,25 @@ function listenForWakeWord() {
 
   } catch (error) {
 
-    console.log(error);
+    console.log(
+      "Wake recognition error:",
+      error
+    );
+
   }
+
 }
 
 
+/* =====================================================
+   WAKE MODE ON/OFF
+===================================================== */
+
 function toggleWakeMode() {
 
-  if (!microphoneEnabled) {
+  if (
+    !microphoneEnabled
+  ) {
 
     alert(
       "Turn the microphone on first."
@@ -1254,14 +1644,21 @@ function toggleWakeMode() {
     return;
   }
 
+
   wakeMode =
     !wakeMode;
 
+
   const button =
-    document.getElementById("wakeButton");
+    document.getElementById(
+      "wakeButton"
+    );
+
 
   const status =
-    document.getElementById("wakeStatus");
+    document.getElementById(
+      "wakeStatus"
+    );
 
 
   if (wakeMode) {
@@ -1269,16 +1666,13 @@ function toggleWakeMode() {
     button.textContent =
       '🔴 DISABLE "HEY ASSISTANT"';
 
+
     status.innerHTML =
       'Wake mode: <span class="on">ON</span>';
 
+
     speak(
       "Wake mode is on. Say Hey Assistant."
-    );
-
-    setTimeout(
-      listenForWakeWord,
-      1500
     );
 
   } else {
@@ -1286,17 +1680,24 @@ function toggleWakeMode() {
     button.textContent =
       '🟢 ENABLE "HEY ASSISTANT"';
 
+
     status.innerHTML =
       'Wake mode: <span class="off">OFF</span>';
 
+
     try {
+
       recognition.stop();
+
     } catch (error) {}
+
 
     speak(
       "Wake mode is off."
     );
+
   }
+
 }
 
 
@@ -1316,12 +1717,14 @@ function handleCommand(command) {
     text.includes("what time") ||
     text.includes("time is it") ||
     text.includes("tell me the time") ||
-    text === "time"
+    text === "time" ||
+    text.includes("current time")
   ) {
 
     sayTime();
 
     return;
+
   }
 
 
@@ -1336,6 +1739,7 @@ function handleCommand(command) {
     getWeather(true);
 
     return;
+
   }
 
 
@@ -1344,12 +1748,13 @@ function handleCommand(command) {
   if (
     text.includes("hello") ||
     text === "hi" ||
-    text.includes("hey")
+    text === "hey"
   ) {
 
     sayHello();
 
     return;
+
   }
 
 
@@ -1363,28 +1768,41 @@ function handleCommand(command) {
     showHelp();
 
     return;
+
   }
 
 
   /* CALL */
 
-  if (text.includes("call")) {
+  if (
+    text.includes("call")
+  ) {
 
     const index =
-      findContactByCommand(text);
+      findContactByCommand(
+        text
+      );
 
-    if (index !== -1) {
 
-      callContact(index);
+    if (
+      index !== -1
+    ) {
+
+      callContact(
+        index
+      );
 
       return;
+
     }
+
 
     speak(
       "I couldn't find that family member."
     );
 
     return;
+
   }
 
 
@@ -1396,62 +1814,88 @@ function handleCommand(command) {
   ) {
 
     const index =
-      findContactByCommand(text);
+      findContactByCommand(
+        text
+      );
 
-    if (index !== -1) {
 
-      textContact(index);
+    if (
+      index !== -1
+    ) {
+
+      textContact(
+        index
+      );
 
       return;
+
     }
+
 
     speak(
       "I couldn't find that family member."
     );
 
     return;
+
   }
 
 
   /* YOUTUBE */
 
-  if (text.includes("youtube")) {
+  if (
+    text.includes("youtube")
+  ) {
 
     speak(
       "Opening YouTube."
     );
 
-    setTimeout(function() {
 
-      window.open(
-        "https://www.youtube.com/",
-        "_blank"
-      );
+    setTimeout(
+      function() {
 
-    }, 1000);
+        window.open(
+          "https://www.youtube.com/",
+          "_blank"
+        );
+
+      },
+      1000
+    );
+
 
     return;
+
   }
 
 
   /* GOOGLE */
 
-  if (text.includes("google")) {
+  if (
+    text.includes("google")
+  ) {
 
     speak(
       "Opening Google."
     );
 
-    setTimeout(function() {
 
-      window.open(
-        "https://www.google.com/",
-        "_blank"
-      );
+    setTimeout(
+      function() {
 
-    }, 1000);
+        window.open(
+          "https://www.google.com/",
+          "_blank"
+        );
+
+      },
+      1000
+    );
+
 
     return;
+
   }
 
 
@@ -1469,21 +1913,29 @@ function handleCommand(command) {
   ) {
 
     const minutes =
-      parseFloat(timerMatch[1]);
+      parseFloat(
+        timerMatch[1]
+      );
 
-    setTimer(minutes);
+
+    setTimer(
+      minutes
+    );
+
 
     return;
+
   }
 
 
-  /* UNKNOWN */
+  /* UNKNOWN COMMAND */
 
   speak(
     "I heard you say " +
     command +
     ". I don't know how to do that yet."
   );
+
 }
 
 
