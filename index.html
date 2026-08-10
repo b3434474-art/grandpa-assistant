@@ -1,131 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grandpa Assistant</title>
-<script src="https://js.puter.com/v2/"></script>
-<script src="ai.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Grandpa Assistant</title>
+<script src="https://js.puter.com/v2/"></script><script src="ai.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#111;color:#fff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center}.app{width:min(900px,95%);text-align:center;padding:25px 0}h1{font-size:48px;margin:0 0 10px}#clock{font-size:60px;font-weight:bold;margin:15px}#status{font-size:28px;min-height:40px;margin:15px}#heard{font-size:23px;min-height:35px;margin:15px}.hint{font-size:18px;color:#ccc}button{border:0;border-radius:18px;padding:20px 30px;margin:8px;font-size:23px;font-weight:bold;cursor:pointer}#talkButton{width:85%;max-width:600px;background:#fff;color:#000}#wakeButton{width:85%;max-width:600px;background:#1976d2;color:#fff}.aiButton{width:85%;max-width:600px;background:#673ab7;color:#fff}.small{background:#333;color:#fff}#weather{background:#222;border-radius:20px;padding:20px;margin:25px auto;max-width:700px;font-size:27px}#timer{font-size:30px;margin:20px;min-height:40px}.contact{background:#222;border-radius:18px;padding:20px;margin:15px auto;max-width:700px}.contactName{font-size:28px;font-weight:bold;margin-bottom:10px}.call{background:#1769aa;color:#fff}.text{background:#388e3c;color:#fff}.remove{background:#8b0000;color:#fff;font-size:18px}#settings{background:#222;border-radius:20px;padding:25px;margin-top:25px}input{padding:15px;margin:8px;border-radius:10px;border:0;font-size:20px;width:80%;max-width:450px}.add{background:#1976d2;color:#fff}
-</style>
-</head>
-<body>
-<main class="app">
-<h1>🎙️ Grandpa Assistant</h1>
-<div id="clock">--:--</div>
-<div id="status">Ready</div>
-<div id="heard">Press TALK TO ME and ask me anything.</div>
-<button id="talkButton" onclick="startListening()">🎤 TALK TO ME</button>
-<button id="wakeButton" onclick="toggleWakeMode()">🟢 ENABLE "HEY ASSISTANT"</button>
-<button class="aiButton" onclick="openAIChat()">🧠 ASK AI</button>
-<div class="hint">Try: “What is a tornado?” or “Tell me a joke.”</div>
-<div id="weather">🌤️ Loading weather...</div>
-<div id="timer"></div>
-<button class="small" onclick="sayTime()">🕐 What time is it?</button>
-<button class="small" onclick="getWeather(true)">🌤️ Weather</button>
-<button class="small" onclick="sayHello()">👋 Hello</button>
-<button class="small" onclick="openYouTube()">▶️ YouTube</button>
-<button class="small" onclick="openGoogle()">🔎 Google</button>
-<h2>👨‍👩‍👧 Family</h2>
-<div id="contacts"></div>
-<section id="settings"><h2>➕ Add Family Contact</h2><input id="contactName" placeholder="Name"><br><input id="contactPhone" placeholder="Phone number" type="tel"><br><button class="add" onclick="addContact()">Add Contact</button></section>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at top,#243b65 0,#101827 38%,#070b12 100%)}.app{width:min(1100px,94%);margin:auto;padding:30px 0 60px}header{text-align:center;padding:25px 15px 15px}.logo{font-size:70px}h1{font-size:52px;margin:5px 0}.subtitle{font-size:21px;color:#cbd5e1}.card{background:rgba(20,29,45,.88);border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:25px;margin:18px 0;box-shadow:0 15px 40px rgba(0,0,0,.3);backdrop-filter:blur(8px)}#clock{font-size:68px;font-weight:bold;text-align:center}.status{text-align:center;font-size:28px;min-height:40px;margin:12px}.heard{text-align:center;font-size:22px;color:#dbeafe;min-height:35px}.main-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.main-btn{min-height:100px;font-size:27px;border:0;border-radius:22px;font-weight:bold;cursor:pointer}.talk{background:#fff;color:#111}.wake{background:#2563eb;color:#fff}.ai{background:#7c3aed;color:#fff}.stop{background:#b91c1c;color:#fff}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.tile{background:#111b2c;border-radius:22px;padding:22px;text-align:center}.tile h2{margin-top:0;font-size:28px}.small{font-size:20px;padding:16px 22px;border:0;border-radius:16px;background:#334155;color:#fff;font-weight:bold;cursor:pointer;margin:5px}.weather{font-size:25px;line-height:1.5}.timer{font-size:30px;font-weight:bold;min-height:40px}.input{padding:15px;border:0;border-radius:12px;font-size:19px;width:min(420px,90%);margin:6px}.add{background:#2563eb;color:#fff;border:0;border-radius:14px;padding:15px 24px;font-size:20px;font-weight:bold;cursor:pointer}.contact{background:#172235;border-radius:18px;padding:18px;margin:10px 0}.contactName{font-size:26px;font-weight:bold}.call{background:#0ea5e9;color:#fff}.text{background:#16a34a;color:#fff}.remove{background:#991b1b;color:#fff;font-size:16px}.contact button{border:0;border-radius:12px;padding:13px 18px;font-size:18px;font-weight:bold;margin:5px;cursor:pointer}.feature-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{padding:18px;background:#111b2c;border-radius:18px;font-size:19px}.danger{background:#7f1d1d}.footer{text-align:center;color:#94a3b8;margin-top:25px;font-size:16px}@media(max-width:700px){h1{font-size:40px}#clock{font-size:52px}.main-actions,.grid,.feature-list{grid-template-columns:1fr}.main-btn{min-height:80px}.logo{font-size:55px}}
+</style></head>
+<body><main class="app">
+<header><div class="logo">🎙️</div><h1>Grandpa Assistant</h1><div class="subtitle">Your friendly voice-powered helper</div></header>
+<section class="card"><div id="clock">--:--</div><div id="status" class="status">Ready</div><div id="heard" class="heard">Press TALK TO ME and ask me anything.</div><div class="main-actions"><button class="main-btn talk" onclick="startListening()">🎤 TALK TO ME</button><button class="main-btn wake" id="wakeButton" onclick="toggleWakeMode()">🟢 HEY ASSISTANT</button><button class="main-btn ai" onclick="openAIChat()">🧠 ASK THE AI</button><button class="main-btn stop" onclick="stopAssistant()">🔇 STOP</button></div></section>
+<section class="card grid"><div class="tile"><h2>🌤️ Weather</h2><div id="weather" class="weather">Loading...</div><button class="small" onclick="getWeather(true)">Update & Speak</button></div><div class="tile"><h2>⏰ Timer</h2><div id="timer" class="timer"></div><button class="small" onclick="quickTimer(5)">5 min</button><button class="small" onclick="quickTimer(10)">10 min</button><button class="small" onclick="quickTimer(30)">30 min</button></div></section>
+<section class="card"><h2>🛠️ Quick Actions</h2><button class="small" onclick="sayTime()">🕐 What time?</button><button class="small" onclick="sayHello()">👋 Hello</button><button class="small" onclick="openYouTube()">▶️ YouTube</button><button class="small" onclick="openGoogle()">🔎 Google</button><button class="small" onclick="addNote()">📝 Voice Note</button><button class="small" onclick="showNotes()">📋 My Notes</button><button class="small" onclick="showReminders()">🔔 Reminders</button></section>
+<section class="card"><h2>✨ What I Can Do</h2><div class="feature-list"><div class="feature">🧠 Answer questions with AI</div><div class="feature">🎤 Voice commands</div><div class="feature">🔊 Speak answers</div><div class="feature">⏰ Timers & reminders</div><div class="feature">🌤️ Weather</div><div class="feature">📝 Voice notes</div><div class="feature">📞 Family calls</div><div class="feature">💬 Family texts</div><div class="feature">▶️ Open websites</div></div></section>
+<section class="card"><h2>👨‍👩‍👧 Family</h2><div id="contacts"></div><h3>➕ Add Family Contact</h3><input class="input" id="contactName" placeholder="Name"><input class="input" id="contactPhone" placeholder="Phone number" type="tel"><button class="add" onclick="addContact()">Add Contact</button></section>
+<div class="footer">Grandpa Assistant • AI answers may occasionally be wrong. For emergencies, contact emergency services directly.</div>
 </main>
 <script>
-let recognition=null;
-let listeningForCommand=false;
-let wakeMode=false;
-let assistantSpeaking=false;
-let timerInterval=null;
-
-function speak(message){
-  assistantSpeaking=true;
-  if(recognition){try{recognition.stop()}catch(e){}}
-  listeningForCommand=false;
-  window.speechSynthesis.cancel();
-  const speech=new SpeechSynthesisUtterance(String(message));
-  speech.rate=.9;
-  speech.pitch=1;
-  document.getElementById('status').textContent='🔊 Speaking...';
-  speech.onend=()=>{assistantSpeaking=false;document.getElementById('status').textContent='Ready';if(wakeMode)setTimeout(listenForWakeWord,1500)};
-  speech.onerror=()=>{assistantSpeaking=false;document.getElementById('status').textContent='Ready'};
-  window.speechSynthesis.speak(speech);
-}
-
-function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}
-setInterval(updateClock,1000);updateClock();
-function sayTime(){speak('The time is '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}))}
-function sayHello(){speak('Hello! How can I help you?')}
-
-async function getWeather(speakWeather=false){
-  const box=document.getElementById('weather');box.textContent='🌤️ Getting Artesia weather...';
-  try{
-    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=32.8423&longitude=-104.4406&current=temperature_2m,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph');
-    if(!r.ok)throw Error();const d=await r.json();const t=Math.round(d.current.temperature_2m);const w=Math.round(d.current.wind_speed_10m);const desc=weatherDescription(d.current.weather_code);
-    box.innerHTML='🌤️ <strong>Artesia, New Mexico</strong><br>'+t+'°F — '+desc+'<br>💨 Wind: '+w+' mph';
-    if(speakWeather)speak('In Artesia, New Mexico, it is '+t+' degrees Fahrenheit and '+desc+'.');
-  }catch(e){box.textContent='❌ Weather unavailable.';if(speakWeather)speak("Sorry, I couldn't get the weather.")}
-}
-function weatherDescription(c){if(c===0)return'clear skies';if(c===1||c===2)return'partly cloudy';if(c===3)return'cloudy';if(c>=45&&c<=48)return'foggy';if(c>=51&&c<=67)return'rain';if(c>=71&&c<=77)return'snow';if(c>=80&&c<=82)return'rain showers';if(c>=95)return'thunderstorms';return'unknown conditions'}
-getWeather();
-
-function setTimer(minutes){
-  if(!minutes||minutes<=0){speak('Please tell me how many minutes.');return}
-  if(timerInterval)clearInterval(timerInterval);let seconds=Math.round(minutes*60);const box=document.getElementById('timer');speak('Timer set for '+minutes+(minutes===1?' minute.':' minutes.'));
-  function update(){const m=Math.floor(seconds/60),s=seconds%60;box.textContent='⏰ Timer: '+m+':'+String(s).padStart(2,'0');if(seconds<=0){clearInterval(timerInterval);timerInterval=null;box.textContent='🔔 TIMER FINISHED!';speak('Your timer is finished.');return}seconds--}
-  update();timerInterval=setInterval(update,1000);
-}
-function openYouTube(){speak('Opening YouTube.');setTimeout(()=>window.open('https://www.youtube.com/','_blank'),1000)}
-function openGoogle(){speak('Opening Google.');setTimeout(()=>window.open('https://www.google.com/','_blank'),1000)}
-
-function getContacts(){try{return JSON.parse(localStorage.getItem('grandpaContacts'))||[]}catch(e){return[]}}
-function saveContacts(c){localStorage.setItem('grandpaContacts',JSON.stringify(c));displayContacts()}
-function addContact(){const name=document.getElementById('contactName').value.trim(),phone=document.getElementById('contactPhone').value.trim();if(!name||!phone){alert('Enter a name and phone number.');return}const c=getContacts();c.push({name,phone});saveContacts(c);document.getElementById('contactName').value='';document.getElementById('contactPhone').value='';speak(name+' has been added.')}
-function displayContacts(){const box=document.getElementById('contacts'),c=getContacts();box.innerHTML='';if(!c.length){box.innerHTML='<p>No contacts yet.</p>';return}c.forEach((x,i)=>{const d=document.createElement('div');d.className='contact';d.innerHTML='<div class="contactName">👤 '+escapeHTML(x.name)+'</div><button class="call" onclick="callContact('+i+')">📞 Call</button><button class="text" onclick="textContact('+i+')">💬 Text</button><br><button class="remove" onclick="removeContact('+i+')">🗑️ Remove</button>';box.appendChild(d)})}
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function callContact(i){const c=getContacts()[i];if(c&&confirm('Call '+c.name+'?'))window.location.href='tel:'+c.phone}
-function textContact(i){const c=getContacts()[i];if(c&&confirm('Text '+c.name+'?'))window.location.href='sms:'+c.phone}
-function removeContact(i){const c=getContacts(),x=c[i];if(x&&confirm('Remove '+x.name+'?')){c.splice(i,1);saveContacts(c)}}
-displayContacts();
-
-const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(SpeechRecognition){
-  recognition=new SpeechRecognition();
-  recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-US';
-  recognition.onstart=()=>{if(!assistantSpeaking)document.getElementById('status').textContent=listeningForCommand?'🎤 Listening...':'👂 Listening for "Hey Assistant"...'};
-  recognition.onresult=e=>{
-    if(assistantSpeaking)return;
-    const text=e.results[0][0].transcript.trim();
-    document.getElementById('heard').textContent='You said: '+text;
-    if(!listeningForCommand){
-      const lower=text.toLowerCase();
-      if(lower.includes('hey assistant')||lower.includes('hey computer')){listeningForCommand=true;speak('Yes? How can I help?')}
-      return;
-    }
-    listeningForCommand=false;
-    handleCommand(text);
-  };
-  recognition.onerror=e=>{console.log('Speech error:',e.error);listeningForCommand=false;if(!assistantSpeaking)document.getElementById('status').textContent='❌ Microphone error'};
-  recognition.onend=()=>{if(!assistantSpeaking&&wakeMode&&!listeningForCommand)setTimeout(listenForWakeWord,1500)};
-}else{document.getElementById('status').textContent='❌ Voice recognition is not supported in this browser.'}
-
-function startListening(){if(!recognition){speak('Your browser does not support voice recognition.');return}if(assistantSpeaking)return;listeningForCommand=true;try{recognition.start()}catch(e){console.log(e)}}
+let recognition=null,listeningForCommand=false,wakeMode=false,assistantSpeaking=false,timerInterval=null;
+function speak(message){assistantSpeaking=true;if(recognition){try{recognition.stop()}catch(e){}}listeningForCommand=false;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(message));u.rate=.9;u.pitch=1;document.getElementById('status').textContent='🔊 Speaking...';u.onend=()=>{assistantSpeaking=false;document.getElementById('status').textContent='Ready';if(wakeMode)setTimeout(listenForWakeWord,1500)};u.onerror=()=>{assistantSpeaking=false;document.getElementById('status').textContent='Ready'};window.speechSynthesis.speak(u)}
+function stopAssistant(){window.speechSynthesis.cancel();assistantSpeaking=false;listeningForCommand=false;try{if(recognition)recognition.stop()}catch(e){}document.getElementById('status').textContent='Ready'}
+function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}setInterval(updateClock,1000);updateClock();
+function sayTime(){speak('The time is '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}))}function sayHello(){speak('Hello! How can I help you?')}
+async function getWeather(speakWeather=false){const b=document.getElementById('weather');b.textContent='🌤️ Getting weather...';try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=32.8423&longitude=-104.4406&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&temperature_unit=fahrenheit&wind_speed_unit=mph&forecast_days=2');if(!r.ok)throw Error();const d=await r.json();const t=Math.round(d.current.temperature_2m),w=Math.round(d.current.wind_speed_10m),desc=weatherDescription(d.current.weather_code);b.innerHTML='📍 <strong>Artesia, NM</strong><br>'+t+'°F — '+desc+'<br>💨 '+w+' mph';if(speakWeather)speak('In Artesia, it is '+t+' degrees Fahrenheit and '+desc+'.')}catch(e){b.textContent='❌ Weather unavailable';if(speakWeather)speak("Sorry, I couldn't get the weather.")}}function weatherDescription(c){if(c===0)return'clear skies';if(c===1||c===2)return'partly cloudy';if(c===3)return'cloudy';if(c>=45&&c<=48)return'foggy';if(c>=51&&c<=67)return'rain';if(c>=71&&c<=77)return'snow';if(c>=80&&c<=82)return'rain showers';if(c>=95)return'thunderstorms';return'unknown conditions'}getWeather();
+function setTimer(minutes){if(!minutes||minutes<=0)return speak('Please tell me how many minutes.');if(timerInterval)clearInterval(timerInterval);let sec=Math.round(minutes*60);const b=document.getElementById('timer');speak('Timer set for '+minutes+(minutes===1?' minute.':' minutes.'));function tick(){b.textContent='⏰ '+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');if(sec<=0){clearInterval(timerInterval);timerInterval=null;b.textContent='🔔 TIMER FINISHED!';speak('Your timer is finished.');return}sec--}tick();timerInterval=setInterval(tick,1000)}function quickTimer(m){setTimer(m)}
+function getNotes(){try{return JSON.parse(localStorage.getItem('grandpaNotes'))||[]}catch(e){return[]}}function addNote(){const n=prompt('What should I remember?');if(!n)return;const a=getNotes();a.push({text:n,time:new Date().toLocaleString()});localStorage.setItem('grandpaNotes',JSON.stringify(a));speak('I saved that note.')}function showNotes(){const a=getNotes();alert(a.length?a.map((n,i)=>(i+1)+'. '+n.text+' — '+n.time).join('\n\n'):'No notes yet.')}
+function getReminders(){try{return JSON.parse(localStorage.getItem('grandpaReminders'))||[]}catch(e){return[]}}function addReminder(text,minutes){const a=getReminders();a.push({text,at:Date.now()+minutes*60000});localStorage.setItem('grandpaReminders',JSON.stringify(a));setTimeout(()=>{speak('Reminder: '+text);},minutes*60000);speak('Okay, I will remind you in '+minutes+' minutes.')}function showReminders(){const a=getReminders().filter(x=>x.at>Date.now());localStorage.setItem('grandpaReminders',JSON.stringify(a));alert(a.length?a.map(x=>x.text+' — '+new Date(x.at).toLocaleString()).join('\n\n'):'No upcoming reminders.')}
+function openYouTube(){speak('Opening YouTube.');setTimeout(()=>window.open('https://www.youtube.com/','_blank'),900)}function openGoogle(){speak('Opening Google.');setTimeout(()=>window.open('https://www.google.com/','_blank'),900)}
+function getContacts(){try{return JSON.parse(localStorage.getItem('grandpaContacts'))||[]}catch(e){return[]}}function saveContacts(c){localStorage.setItem('grandpaContacts',JSON.stringify(c));displayContacts()}function addContact(){const n=document.getElementById('contactName').value.trim(),p=document.getElementById('contactPhone').value.trim();if(!n||!p)return alert('Enter a name and phone number.');const c=getContacts();c.push({name:n,phone:p});saveContacts(c);document.getElementById('contactName').value='';document.getElementById('contactPhone').value='';speak(n+' was added to family contacts.')}function displayContacts(){const b=document.getElementById('contacts'),c=getContacts();b.innerHTML='';if(!c.length){b.innerHTML='<p>No contacts yet.</p>';return}c.forEach((x,i)=>{const d=document.createElement('div');d.className='contact';d.innerHTML='<div class="contactName">👤 '+escapeHTML(x.name)+'</div><button class="call" onclick="callContact('+i+')">📞 Call</button><button class="text" onclick="textContact('+i+')">💬 Text</button><button class="remove" onclick="removeContact('+i+')">🗑️ Remove</button>';b.appendChild(d)})}function escapeHTML(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function callContact(i){const c=getContacts()[i];if(c&&confirm('Call '+c.name+'?'))location.href='tel:'+c.phone}function textContact(i){const c=getContacts()[i];if(c&&confirm('Text '+c.name+'?'))location.href='sms:'+c.phone}function removeContact(i){const c=getContacts(),x=c[i];if(x&&confirm('Remove '+x.name+'?')){c.splice(i,1);saveContacts(c)}}displayContacts();
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-US';recognition.onstart=()=>{if(!assistantSpeaking)document.getElementById('status').textContent=listeningForCommand?'🎤 Listening...':'👂 Listening...'};recognition.onresult=e=>{if(assistantSpeaking)return;const text=e.results[0][0].transcript.trim();document.getElementById('heard').textContent='You said: '+text;if(!listeningForCommand){const l=text.toLowerCase();if(l.includes('hey assistant')||l.includes('hey computer')){listeningForCommand=true;speak('Yes? How can I help?')}return}listeningForCommand=false;handleCommand(text)};recognition.onerror=e=>{console.log(e.error);listeningForCommand=false;if(!assistantSpeaking)document.getElementById('status').textContent='❌ Microphone error'};recognition.onend=()=>{if(!assistantSpeaking&&wakeMode&&!listeningForCommand)setTimeout(listenForWakeWord,1500)}}else document.getElementById('status').textContent='❌ Voice recognition is not supported in this browser.';
+function startListening(){if(!recognition)return speak('Your browser does not support voice recognition.');if(assistantSpeaking)return;listeningForCommand=true;try{recognition.start()}catch(e){}}
 function listenForWakeWord(){if(!wakeMode||listeningForCommand||assistantSpeaking||!recognition)return;try{recognition.start()}catch(e){}}
-function toggleWakeMode(){if(!recognition){speak('Voice recognition is not available.');return}wakeMode=!wakeMode;const b=document.getElementById('wakeButton');if(wakeMode){b.textContent='🔴 DISABLE "HEY ASSISTANT"';speak('Wake mode is on. Say Hey Assistant.')}else{b.textContent='🟢 ENABLE "HEY ASSISTANT"';try{recognition.stop()}catch(e){}speak('Wake mode is off.')}}
-
-function handleCommand(command){
-  const text=command.toLowerCase().trim();
-  if(text.includes('what time')||text.includes('time is it')||text.includes('tell me the time')||text.includes('current time')||text==='time'){sayTime();return}
-  if(text.includes('weather')||text.includes('temperature')||text.includes('outside')){getWeather(true);return}
-  if(text.includes('hello')||text==='hi'){sayHello();return}
-  if(text.includes('youtube')){openYouTube();return}
-  if(text.includes('google')){openGoogle();return}
-  const tm=text.match(/(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/);if(text.includes('timer')&&tm){setTimer(parseFloat(tm[1]));return}
-  if(text.includes('call')){const c=getContacts();for(let i=0;i<c.length;i++){if(text.includes(c[i].name.toLowerCase())){callContact(i);return}}speak("I couldn't find that contact.");return}
-  if(text.includes('text')||text.includes('message')){const c=getContacts();for(let i=0;i<c.length;i++){if(text.includes(c[i].name.toLowerCase())){textContact(i);return}}speak("I couldn't find that contact.");return}
-  /* Everything else goes to the AI. */
-  askGrandpaAI(command);
-}
-</script>
-</body>
-</html>
+function toggleWakeMode(){if(!recognition)return;sake=undefined;wakeMode=!wakeMode;const b=document.getElementById('wakeButton');if(wakeMode){b.textContent='🔴 DISABLE HEY ASSISTANT';speak('Wake mode is on. Say Hey Assistant.')}else{b.textContent='🟢 HEY ASSISTANT';try{recognition.stop()}catch(e){}speak('Wake mode is off.')}}
+function handleCommand(command){const text=command.toLowerCase().trim();if(text.includes('what time')||text.includes('time is it')||text.includes('tell me the time')||text.includes('current time')||text==='time'){sayTime();return}if(text.includes('weather')||text.includes('temperature')||text.includes('outside')){getWeather(true);return}if(text.includes('hello')||text==='hi'){sayHello();return}if(text.includes('youtube')){openYouTube();return}if(text.includes('google')){openGoogle();return}const tm=text.match(/(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/);if(text.includes('timer')&&tm){setTimer(parseFloat(tm[1]));return}if(text.includes('call')){const c=getContacts();for(let i=0;i<c.length;i++)if(text.includes(c[i].name.toLowerCase()))return callContact(i);return speak("I couldn't find that contact.")}if(text.includes('text')||text.includes('message')){const c=getContacts();for(let i=0;i<c.length;i++)if(text.includes(c[i].name.toLowerCase()))return textContact(i);return speak("I couldn't find that contact.")}if(text.includes('remember')||text.includes('note')){const note=command.replace(/remember|note/ig,'').trim();if(note){const a=getNotes();a.push({text:note,time:new Date().toLocaleString()});localStorage.setItem('grandpaNotes',JSON.stringify(a));return speak('I saved that note.')} }const rm=text.match(/remind me in (\d+)\s*(minute|minutes|hour|hours)/);if(rm){const amount=Number(rm[1])*(rm[2].startsWith('hour')?60:1);const clean=command.replace(rm[0],'').replace(/to/i,'').trim();return addReminder(clean||'your reminder',amount)}askGrandpaAI(command)}
+</script></body></html>
