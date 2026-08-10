@@ -1,35 +1,1788 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Grandpa Assistant</title>
-<script src="https://js.puter.com/v2/"></script><script src="ai.js"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at top,#243b65 0,#101827 38%,#070b12 100%)}.app{width:min(1100px,94%);margin:auto;padding:30px 0 60px}header{text-align:center;padding:25px 15px 15px}.logo{font-size:70px}h1{font-size:52px;margin:5px 0}.subtitle{font-size:21px;color:#cbd5e1}.card{background:rgba(20,29,45,.88);border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:25px;margin:18px 0;box-shadow:0 15px 40px rgba(0,0,0,.3);backdrop-filter:blur(8px)}#clock{font-size:68px;font-weight:bold;text-align:center}.status{text-align:center;font-size:28px;min-height:40px;margin:12px}.heard{text-align:center;font-size:22px;color:#dbeafe;min-height:35px}.main-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.main-btn{min-height:100px;font-size:27px;border:0;border-radius:22px;font-weight:bold;cursor:pointer}.talk{background:#fff;color:#111}.wake{background:#2563eb;color:#fff}.ai{background:#7c3aed;color:#fff}.stop{background:#b91c1c;color:#fff}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.tile{background:#111b2c;border-radius:22px;padding:22px;text-align:center}.tile h2{margin-top:0;font-size:28px}.small{font-size:20px;padding:16px 22px;border:0;border-radius:16px;background:#334155;color:#fff;font-weight:bold;cursor:pointer;margin:5px}.weather{font-size:25px;line-height:1.5}.timer{font-size:30px;font-weight:bold;min-height:40px}.input{padding:15px;border:0;border-radius:12px;font-size:19px;width:min(420px,90%);margin:6px}.add{background:#2563eb;color:#fff;border:0;border-radius:14px;padding:15px 24px;font-size:20px;font-weight:bold;cursor:pointer}.contact{background:#172235;border-radius:18px;padding:18px;margin:10px 0}.contactName{font-size:26px;font-weight:bold}.call{background:#0ea5e9;color:#fff}.text{background:#16a34a;color:#fff}.remove{background:#991b1b;color:#fff;font-size:16px}.contact button{border:0;border-radius:12px;padding:13px 18px;font-size:18px;font-weight:bold;margin:5px;cursor:pointer}.feature-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{padding:18px;background:#111b2c;border-radius:18px;font-size:19px}.danger{background:#7f1d1d}.footer{text-align:center;color:#94a3b8;margin-top:25px;font-size:16px}@media(max-width:700px){h1{font-size:40px}#clock{font-size:52px}.main-actions,.grid,.feature-list{grid-template-columns:1fr}.main-btn{min-height:80px}.logo{font-size:55px}}
-</style></head>
-<body><main class="app">
-<header><div class="logo">🎙️</div><h1>Grandpa Assistant</h1><div class="subtitle">Your friendly voice-powered helper</div></header>
-<section class="card"><div id="clock">--:--</div><div id="status" class="status">Ready</div><div id="heard" class="heard">Press TALK TO ME and ask me anything.</div><div class="main-actions"><button class="main-btn talk" onclick="startListening()">🎤 TALK TO ME</button><button class="main-btn wake" id="wakeButton" onclick="toggleWakeMode()">🟢 HEY ASSISTANT</button><button class="main-btn ai" onclick="openAIChat()">🧠 ASK THE AI</button><button class="main-btn stop" onclick="stopAssistant()">🔇 STOP</button></div></section>
-<section class="card grid"><div class="tile"><h2>🌤️ Weather</h2><div id="weather" class="weather">Loading...</div><button class="small" onclick="getWeather(true)">Update & Speak</button></div><div class="tile"><h2>⏰ Timer</h2><div id="timer" class="timer"></div><button class="small" onclick="quickTimer(5)">5 min</button><button class="small" onclick="quickTimer(10)">10 min</button><button class="small" onclick="quickTimer(30)">30 min</button></div></section>
-<section class="card"><h2>🛠️ Quick Actions</h2><button class="small" onclick="sayTime()">🕐 What time?</button><button class="small" onclick="sayHello()">👋 Hello</button><button class="small" onclick="openYouTube()">▶️ YouTube</button><button class="small" onclick="openGoogle()">🔎 Google</button><button class="small" onclick="addNote()">📝 Voice Note</button><button class="small" onclick="showNotes()">📋 My Notes</button><button class="small" onclick="showReminders()">🔔 Reminders</button></section>
-<section class="card"><h2>✨ What I Can Do</h2><div class="feature-list"><div class="feature">🧠 Answer questions with AI</div><div class="feature">🎤 Voice commands</div><div class="feature">🔊 Speak answers</div><div class="feature">⏰ Timers & reminders</div><div class="feature">🌤️ Weather</div><div class="feature">📝 Voice notes</div><div class="feature">📞 Family calls</div><div class="feature">💬 Family texts</div><div class="feature">▶️ Open websites</div></div></section>
-<section class="card"><h2>👨‍👩‍👧 Family</h2><div id="contacts"></div><h3>➕ Add Family Contact</h3><input class="input" id="contactName" placeholder="Name"><input class="input" id="contactPhone" placeholder="Phone number" type="tel"><button class="add" onclick="addContact()">Add Contact</button></section>
-<div class="footer">Grandpa Assistant • AI answers may occasionally be wrong. For emergencies, contact emergency services directly.</div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grandpa Assistant</title>
+
+  <script src="https://js.puter.com/v2/"></script>
+  <script src="ai.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      background: radial-gradient(
+        circle at top,
+        #243b65 0,
+        #101827 38%,
+        #070b12 100%
+      );
+    }
+
+    .app {
+      width: min(1100px, 94%);
+      margin: auto;
+      padding: 30px 0 60px;
+    }
+
+    header {
+      text-align: center;
+      padding: 25px 15px 15px;
+    }
+
+    .logo {
+      font-size: 70px;
+    }
+
+    h1 {
+      font-size: 52px;
+      margin: 5px 0;
+    }
+
+    .subtitle {
+      font-size: 21px;
+      color: #cbd5e1;
+    }
+
+    .card {
+      background: rgba(20, 29, 45, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      padding: 25px;
+      margin: 18px 0;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+    }
+
+    #clock {
+      font-size: 68px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 28px;
+      min-height: 40px;
+      margin: 12px;
+    }
+
+    .heard {
+      text-align: center;
+      font-size: 22px;
+      color: #dbeafe;
+      min-height: 35px;
+    }
+
+    .main-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .main-btn {
+      min-height: 100px;
+      font-size: 27px;
+      border: 0;
+      border-radius: 22px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .talk {
+      background: #fff;
+      color: #111;
+    }
+
+    .wake {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .ai {
+      background: #7c3aed;
+      color: #fff;
+    }
+
+    .chat {
+      background: #0f766e;
+      color: #fff;
+    }
+
+    .stop {
+      background: #b91c1c;
+      color: #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .tile {
+      background: #111b2c;
+      border-radius: 22px;
+      padding: 22px;
+      text-align: center;
+    }
+
+    .tile h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .small {
+      font-size: 20px;
+      padding: 16px 22px;
+      border: 0;
+      border-radius: 16px;
+      background: #334155;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .weather {
+      font-size: 25px;
+      line-height: 1.5;
+    }
+
+    .timer {
+      font-size: 30px;
+      font-weight: bold;
+      min-height: 40px;
+    }
+
+    .input {
+      padding: 15px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 19px;
+      width: min(420px, 90%);
+      margin: 6px;
+    }
+
+    .add {
+      background: #2563eb;
+      color: #fff;
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 24px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .contact {
+      background: #172235;
+      border-radius: 18px;
+      padding: 18px;
+      margin: 10px 0;
+    }
+
+    .contactName {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .call {
+      background: #0ea5e9;
+      color: #fff;
+    }
+
+    .text {
+      background: #16a34a;
+      color: #fff;
+    }
+
+    .remove {
+      background: #991b1b;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .contact button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .feature {
+      padding: 18px;
+      background: #111b2c;
+      border-radius: 18px;
+      font-size: 19px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #94a3b8;
+      margin-top: 25px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 40px;
+      }
+
+      #clock {
+        font-size: 52px;
+      }
+
+      .main-actions,
+      .grid,
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .main-btn {
+        min-height: 80px;
+      }
+
+      .logo {
+        font-size: 55px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="app">
+
+  <header>
+    <div class="logo">🎙️</div>
+    <h1>Grandpa Assistant</h1>
+    <div class="subtitle">
+      Your friendly voice-powered helper
+    </div>
+  </header>
+
+  <!-- MAIN ASSISTANT -->
+  <section class="card">
+
+    <div id="clock">--:--</div>
+
+    <div id="status" class="status">
+      Ready
+    </div>
+
+    <div id="heard" class="heard">
+      Press TALK TO ME and ask me anything.
+    </div>
+
+    <div class="main-actions">
+
+      <button
+        class="main-btn talk"
+        onclick="startListening()">
+        🎤 TALK TO ME
+      </button>
+
+      <button
+        class="main-btn wake"
+        id="wakeButton"
+        onclick="toggleWakeMode()">
+        🟢 HEY ASSISTANT
+      </button>
+
+      <button
+        class="main-btn ai"
+        onclick="openAIChat()">
+        🧠 ASK THE AI
+      </button>
+
+      <!-- FAMILY CHAT -->
+      <button
+        class="main-btn chat"
+        onclick="location.href='family.html'">
+        💬 FAMILY CHAT
+      </button>
+
+      <button
+        class="main-btn stop"
+        onclick="stopAssistant()">
+        🔇 STOP
+      </button>
+
+    </div>
+  </section>
+
+
+  <!-- WEATHER + TIMER -->
+  <section class="card grid">
+
+    <div class="tile">
+
+      <h2>🌤️ Weather</h2>
+
+      <div id="weather" class="weather">
+        Loading...
+      </div>
+
+      <button
+        class="small"
+        onclick="getWeather(true)">
+        Update & Speak
+      </button>
+
+    </div>
+
+
+    <div class="tile">
+
+      <h2>⏰ Timer</h2>
+
+      <div id="timer" class="timer"></div>
+
+      <button
+        class="small"
+        onclick="quickTimer(5)">
+        5 min
+      </button>
+
+      <button
+        class="small"
+        onclick="quickTimer(10)">
+        10 min
+      </button>
+
+      <button
+        class="small"
+        onclick="quickTimer(30)">
+        30 min
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- QUICK ACTIONS -->
+  <section class="card">
+
+    <h2>🛠️ Quick Actions</h2>
+
+    <button
+      class="small"
+      onclick="sayTime()">
+      🕐 What time?
+    </button>
+
+    <button
+      class="small"
+      onclick="sayHello()">
+      👋 Hello
+    </button>
+
+    <button
+      class="small"
+      onclick="openYouTube()">
+      ▶️ YouTube
+    </button>
+
+    <button
+      class="small"
+      onclick="openGoogle()">
+      🔎 Google
+    </button>
+
+    <button
+      class="small"
+      onclick="addNote()">
+      📝 Voice Note
+    </button>
+
+    <button
+      class="small"
+      onclick="showNotes()">
+      📋 My Notes
+    </button>
+
+    <button
+      class="small"
+      onclick="showReminders()">
+      🔔 Reminders
+    </button>
+
+  </section>
+
+
+  <!-- FEATURES -->
+  <section class="card">
+
+    <h2>✨ What I Can Do</h2>
+
+    <div class="feature-list">
+
+      <div class="feature">
+        🧠 Answer questions with AI
+      </div>
+
+      <div class="feature">
+        🎤 Voice commands
+      </div>
+
+      <div class="feature">
+        🔊 Speak answers
+      </div>
+
+      <div class="feature">
+        ⏰ Timers & reminders
+      </div>
+
+      <div class="feature">
+        🌤️ Weather
+      </div>
+
+      <div class="feature">
+        📝 Voice notes
+      </div>
+
+      <div class="feature">
+        📞 Family calls
+      </div>
+
+      <div class="feature">
+        💬 Family texts
+      </div>
+
+      <div class="feature">
+        💬 Family Chat
+      </div>
+
+      <div class="feature">
+        ▶️ Open websites
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FAMILY CONTACTS -->
+  <section class="card">
+
+    <h2>👨‍👩‍👧 Family</h2>
+
+    <div id="contacts"></div>
+
+    <h3>➕ Add Family Contact</h3>
+
+    <input
+      class="input"
+      id="contactName"
+      placeholder="Name">
+
+    <input
+      class="input"
+      id="contactPhone"
+      placeholder="Phone number"
+      type="tel">
+
+    <button
+      class="add"
+      onclick="addContact()">
+      Add Contact
+    </button>
+
+  </section>
+
+
+  <div class="footer">
+    Grandpa Assistant • AI answers may occasionally be wrong.
+    For emergencies, contact emergency services directly.
+  </div>
+
 </main>
+
+
 <script>
-let recognition=null,listeningForCommand=false,wakeMode=false,assistantSpeaking=false,timerInterval=null;
-function speak(message){assistantSpeaking=true;if(recognition){try{recognition.stop()}catch(e){}}listeningForCommand=false;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(message));u.rate=.9;u.pitch=1;document.getElementById('status').textContent='🔊 Speaking...';u.onend=()=>{assistantSpeaking=false;document.getElementById('status').textContent='Ready';if(wakeMode)setTimeout(listenForWakeWord,1500)};u.onerror=()=>{assistantSpeaking=false;document.getElementById('status').textContent='Ready'};window.speechSynthesis.speak(u)}
-function stopAssistant(){window.speechSynthesis.cancel();assistantSpeaking=false;listeningForCommand=false;try{if(recognition)recognition.stop()}catch(e){}document.getElementById('status').textContent='Ready'}
-function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}setInterval(updateClock,1000);updateClock();
-function sayTime(){speak('The time is '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}))}function sayHello(){speak('Hello! How can I help you?')}
-async function getWeather(speakWeather=false){const b=document.getElementById('weather');b.textContent='🌤️ Getting weather...';try{const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=32.8423&longitude=-104.4406&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability&temperature_unit=fahrenheit&wind_speed_unit=mph&forecast_days=2');if(!r.ok)throw Error();const d=await r.json();const t=Math.round(d.current.temperature_2m),w=Math.round(d.current.wind_speed_10m),desc=weatherDescription(d.current.weather_code);b.innerHTML='📍 <strong>Artesia, NM</strong><br>'+t+'°F — '+desc+'<br>💨 '+w+' mph';if(speakWeather)speak('In Artesia, it is '+t+' degrees Fahrenheit and '+desc+'.')}catch(e){b.textContent='❌ Weather unavailable';if(speakWeather)speak("Sorry, I couldn't get the weather.")}}function weatherDescription(c){if(c===0)return'clear skies';if(c===1||c===2)return'partly cloudy';if(c===3)return'cloudy';if(c>=45&&c<=48)return'foggy';if(c>=51&&c<=67)return'rain';if(c>=71&&c<=77)return'snow';if(c>=80&&c<=82)return'rain showers';if(c>=95)return'thunderstorms';return'unknown conditions'}getWeather();
-function setTimer(minutes){if(!minutes||minutes<=0)return speak('Please tell me how many minutes.');if(timerInterval)clearInterval(timerInterval);let sec=Math.round(minutes*60);const b=document.getElementById('timer');speak('Timer set for '+minutes+(minutes===1?' minute.':' minutes.'));function tick(){b.textContent='⏰ '+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');if(sec<=0){clearInterval(timerInterval);timerInterval=null;b.textContent='🔔 TIMER FINISHED!';speak('Your timer is finished.');return}sec--}tick();timerInterval=setInterval(tick,1000)}function quickTimer(m){setTimer(m)}
-function getNotes(){try{return JSON.parse(localStorage.getItem('grandpaNotes'))||[]}catch(e){return[]}}function addNote(){const n=prompt('What should I remember?');if(!n)return;const a=getNotes();a.push({text:n,time:new Date().toLocaleString()});localStorage.setItem('grandpaNotes',JSON.stringify(a));speak('I saved that note.')}function showNotes(){const a=getNotes();alert(a.length?a.map((n,i)=>(i+1)+'. '+n.text+' — '+n.time).join('\n\n'):'No notes yet.')}
-function getReminders(){try{return JSON.parse(localStorage.getItem('grandpaReminders'))||[]}catch(e){return[]}}function addReminder(text,minutes){const a=getReminders();a.push({text,at:Date.now()+minutes*60000});localStorage.setItem('grandpaReminders',JSON.stringify(a));setTimeout(()=>{speak('Reminder: '+text);},minutes*60000);speak('Okay, I will remind you in '+minutes+' minutes.')}function showReminders(){const a=getReminders().filter(x=>x.at>Date.now());localStorage.setItem('grandpaReminders',JSON.stringify(a));alert(a.length?a.map(x=>x.text+' — '+new Date(x.at).toLocaleString()).join('\n\n'):'No upcoming reminders.')}
-function openYouTube(){speak('Opening YouTube.');setTimeout(()=>window.open('https://www.youtube.com/','_blank'),900)}function openGoogle(){speak('Opening Google.');setTimeout(()=>window.open('https://www.google.com/','_blank'),900)}
-function getContacts(){try{return JSON.parse(localStorage.getItem('grandpaContacts'))||[]}catch(e){return[]}}function saveContacts(c){localStorage.setItem('grandpaContacts',JSON.stringify(c));displayContacts()}function addContact(){const n=document.getElementById('contactName').value.trim(),p=document.getElementById('contactPhone').value.trim();if(!n||!p)return alert('Enter a name and phone number.');const c=getContacts();c.push({name:n,phone:p});saveContacts(c);document.getElementById('contactName').value='';document.getElementById('contactPhone').value='';speak(n+' was added to family contacts.')}function displayContacts(){const b=document.getElementById('contacts'),c=getContacts();b.innerHTML='';if(!c.length){b.innerHTML='<p>No contacts yet.</p>';return}c.forEach((x,i)=>{const d=document.createElement('div');d.className='contact';d.innerHTML='<div class="contactName">👤 '+escapeHTML(x.name)+'</div><button class="call" onclick="callContact('+i+')">📞 Call</button><button class="text" onclick="textContact('+i+')">💬 Text</button><button class="remove" onclick="removeContact('+i+')">🗑️ Remove</button>';b.appendChild(d)})}function escapeHTML(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function callContact(i){const c=getContacts()[i];if(c&&confirm('Call '+c.name+'?'))location.href='tel:'+c.phone}function textContact(i){const c=getContacts()[i];if(c&&confirm('Text '+c.name+'?'))location.href='sms:'+c.phone}function removeContact(i){const c=getContacts(),x=c[i];if(x&&confirm('Remove '+x.name+'?')){c.splice(i,1);saveContacts(c)}}displayContacts();
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-US';recognition.onstart=()=>{if(!assistantSpeaking)document.getElementById('status').textContent=listeningForCommand?'🎤 Listening...':'👂 Listening...'};recognition.onresult=e=>{if(assistantSpeaking)return;const text=e.results[0][0].transcript.trim();document.getElementById('heard').textContent='You said: '+text;if(!listeningForCommand){const l=text.toLowerCase();if(l.includes('hey assistant')||l.includes('hey computer')){listeningForCommand=true;speak('Yes? How can I help?')}return}listeningForCommand=false;handleCommand(text)};recognition.onerror=e=>{console.log(e.error);listeningForCommand=false;if(!assistantSpeaking)document.getElementById('status').textContent='❌ Microphone error'};recognition.onend=()=>{if(!assistantSpeaking&&wakeMode&&!listeningForCommand)setTimeout(listenForWakeWord,1500)}}else document.getElementById('status').textContent='❌ Voice recognition is not supported in this browser.';
-function startListening(){if(!recognition)return speak('Your browser does not support voice recognition.');if(assistantSpeaking)return;listeningForCommand=true;try{recognition.start()}catch(e){}}
-function listenForWakeWord(){if(!wakeMode||listeningForCommand||assistantSpeaking||!recognition)return;try{recognition.start()}catch(e){}}
-function toggleWakeMode(){if(!recognition)return;sake=undefined;wakeMode=!wakeMode;const b=document.getElementById('wakeButton');if(wakeMode){b.textContent='🔴 DISABLE HEY ASSISTANT';speak('Wake mode is on. Say Hey Assistant.')}else{b.textContent='🟢 HEY ASSISTANT';try{recognition.stop()}catch(e){}speak('Wake mode is off.')}}
-function handleCommand(command){const text=command.toLowerCase().trim();if(text.includes('what time')||text.includes('time is it')||text.includes('tell me the time')||text.includes('current time')||text==='time'){sayTime();return}if(text.includes('weather')||text.includes('temperature')||text.includes('outside')){getWeather(true);return}if(text.includes('hello')||text==='hi'){sayHello();return}if(text.includes('youtube')){openYouTube();return}if(text.includes('google')){openGoogle();return}const tm=text.match(/(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/);if(text.includes('timer')&&tm){setTimer(parseFloat(tm[1]));return}if(text.includes('call')){const c=getContacts();for(let i=0;i<c.length;i++)if(text.includes(c[i].name.toLowerCase()))return callContact(i);return speak("I couldn't find that contact.")}if(text.includes('text')||text.includes('message')){const c=getContacts();for(let i=0;i<c.length;i++)if(text.includes(c[i].name.toLowerCase()))return textContact(i);return speak("I couldn't find that contact.")}if(text.includes('remember')||text.includes('note')){const note=command.replace(/remember|note/ig,'').trim();if(note){const a=getNotes();a.push({text:note,time:new Date().toLocaleString()});localStorage.setItem('grandpaNotes',JSON.stringify(a));return speak('I saved that note.')} }const rm=text.match(/remind me in (\d+)\s*(minute|minutes|hour|hours)/);if(rm){const amount=Number(rm[1])*(rm[2].startsWith('hour')?60:1);const clean=command.replace(rm[0],'').replace(/to/i,'').trim();return addReminder(clean||'your reminder',amount)}askGrandpaAI(command)}
-</script></body></html>
+
+let recognition = null;
+let listeningForCommand = false;
+let wakeMode = false;
+let assistantSpeaking = false;
+let timerInterval = null;
+
+
+/* =========================
+   TEXT TO SPEECH
+========================= */
+
+function speak(message) {
+
+  assistantSpeaking = true;
+
+  if (recognition) {
+    try {
+      recognition.stop();
+    } catch (e) {}
+  }
+
+  listeningForCommand = false;
+
+  window.speechSynthesis.cancel();
+
+  const speech =
+    new SpeechSynthesisUtterance(String(message));
+
+  speech.rate = 0.9;
+  speech.pitch = 1;
+
+  document.getElementById("status").textContent =
+    "🔊 Speaking...";
+
+  speech.onend = function () {
+
+    assistantSpeaking = false;
+
+    document.getElementById("status").textContent =
+      "Ready";
+
+    if (wakeMode) {
+      setTimeout(listenForWakeWord, 1500);
+    }
+  };
+
+  speech.onerror = function () {
+
+    assistantSpeaking = false;
+
+    document.getElementById("status").textContent =
+      "Ready";
+  };
+
+  window.speechSynthesis.speak(speech);
+}
+
+
+/* =========================
+   STOP
+========================= */
+
+function stopAssistant() {
+
+  window.speechSynthesis.cancel();
+
+  assistantSpeaking = false;
+  listeningForCommand = false;
+
+  try {
+    if (recognition) {
+      recognition.stop();
+    }
+  } catch (e) {}
+
+  document.getElementById("status").textContent =
+    "Ready";
+}
+
+
+/* =========================
+   CLOCK
+========================= */
+
+function updateClock() {
+
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+
+/* =========================
+   HELLO
+========================= */
+
+function sayHello() {
+
+  speak(
+    "Hello! How can I help you?"
+  );
+}
+
+
+/* =========================
+   TIME
+========================= */
+
+function sayTime() {
+
+  const time =
+    new Date().toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+
+  speak(
+    "The time is " + time
+  );
+}
+
+
+/* =========================
+   WEATHER
+========================= */
+
+async function getWeather(speakWeather = false) {
+
+  const box =
+    document.getElementById("weather");
+
+  box.textContent =
+    "🌤️ Getting weather...";
+
+  try {
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=32.8423" +
+      "&longitude=-104.4406" +
+      "&current=temperature_2m,weather_code,wind_speed_10m" +
+      "&hourly=temperature_2m,precipitation_probability" +
+      "&temperature_unit=fahrenheit" +
+      "&wind_speed_unit=mph" +
+      "&forecast_days=2";
+
+    const response =
+      await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Weather error");
+    }
+
+    const data =
+      await response.json();
+
+    const temperature =
+      Math.round(data.current.temperature_2m);
+
+    const wind =
+      Math.round(data.current.wind_speed_10m);
+
+    const description =
+      weatherDescription(
+        data.current.weather_code
+      );
+
+    box.innerHTML =
+      "📍 <strong>Artesia, NM</strong><br>" +
+      temperature +
+      "°F — " +
+      description +
+      "<br>💨 " +
+      wind +
+      " mph";
+
+    if (speakWeather) {
+
+      speak(
+        "In Artesia, it is " +
+        temperature +
+        " degrees Fahrenheit and " +
+        description +
+        "."
+      );
+    }
+
+  } catch (error) {
+
+    box.textContent =
+      "❌ Weather unavailable";
+
+    if (speakWeather) {
+
+      speak(
+        "Sorry, I couldn't get the weather."
+      );
+    }
+  }
+}
+
+
+function weatherDescription(code) {
+
+  if (code === 0)
+    return "clear skies";
+
+  if (code === 1 || code === 2)
+    return "partly cloudy";
+
+  if (code === 3)
+    return "cloudy";
+
+  if (code >= 45 && code <= 48)
+    return "foggy";
+
+  if (code >= 51 && code <= 67)
+    return "rain";
+
+  if (code >= 71 && code <= 77)
+    return "snow";
+
+  if (code >= 80 && code <= 82)
+    return "rain showers";
+
+  if (code >= 95)
+    return "thunderstorms";
+
+  return "unknown conditions";
+}
+
+getWeather();
+
+
+/* =========================
+   TIMER
+========================= */
+
+function setTimer(minutes) {
+
+  if (!minutes || minutes <= 0) {
+
+    speak(
+      "Please tell me how many minutes."
+    );
+
+    return;
+  }
+
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+
+  let seconds =
+    Math.round(minutes * 60);
+
+  const box =
+    document.getElementById("timer");
+
+  speak(
+    "Timer set for " +
+    minutes +
+    (minutes === 1
+      ? " minute."
+      : " minutes.")
+  );
+
+  function tick() {
+
+    const mins =
+      Math.floor(seconds / 60);
+
+    const secs =
+      seconds % 60;
+
+    box.textContent =
+      "⏰ " +
+      mins +
+      ":" +
+      String(secs).padStart(2, "0");
+
+    if (seconds <= 0) {
+
+      clearInterval(timerInterval);
+
+      timerInterval = null;
+
+      box.textContent =
+        "🔔 TIMER FINISHED!";
+
+      speak(
+        "Your timer is finished."
+      );
+
+      return;
+    }
+
+    seconds--;
+  }
+
+  tick();
+
+  timerInterval =
+    setInterval(tick, 1000);
+}
+
+
+function quickTimer(minutes) {
+
+  setTimer(minutes);
+}
+
+
+/* =========================
+   NOTES
+========================= */
+
+function getNotes() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem("grandpaNotes")
+    ) || [];
+
+  } catch (e) {
+
+    return [];
+  }
+}
+
+
+function addNote() {
+
+  const note =
+    prompt("What should I remember?");
+
+  if (!note)
+    return;
+
+  const notes =
+    getNotes();
+
+  notes.push({
+    text: note,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem(
+    "grandpaNotes",
+    JSON.stringify(notes)
+  );
+
+  speak(
+    "I saved that note."
+  );
+}
+
+
+function showNotes() {
+
+  const notes =
+    getNotes();
+
+  alert(
+    notes.length
+      ? notes.map(
+          (n, i) =>
+            (i + 1) +
+            ". " +
+            n.text +
+            " — " +
+            n.time
+        ).join("\n\n")
+      : "No notes yet."
+  );
+}
+
+
+/* =========================
+   REMINDERS
+========================= */
+
+function getReminders() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem("grandpaReminders")
+    ) || [];
+
+  } catch (e) {
+
+    return [];
+  }
+}
+
+
+function addReminder(text, minutes) {
+
+  const reminders =
+    getReminders();
+
+  reminders.push({
+    text: text,
+    at: Date.now() +
+      minutes * 60000
+  });
+
+  localStorage.setItem(
+    "grandpaReminders",
+    JSON.stringify(reminders)
+  );
+
+  setTimeout(function () {
+
+    speak(
+      "Reminder: " + text
+    );
+
+  }, minutes * 60000);
+
+  speak(
+    "Okay, I will remind you in " +
+    minutes +
+    " minutes."
+  );
+}
+
+
+function showReminders() {
+
+  const reminders =
+    getReminders()
+      .filter(
+        x => x.at > Date.now()
+      );
+
+  localStorage.setItem(
+    "grandpaReminders",
+    JSON.stringify(reminders)
+  );
+
+  alert(
+    reminders.length
+      ? reminders.map(
+          x =>
+            x.text +
+            " — " +
+            new Date(x.at)
+              .toLocaleString()
+        ).join("\n\n")
+      : "No upcoming reminders."
+  );
+}
+
+
+/* =========================
+   WEBSITES
+========================= */
+
+function openYouTube() {
+
+  speak(
+    "Opening YouTube."
+  );
+
+  setTimeout(function () {
+
+    window.open(
+      "https://www.youtube.com/",
+      "_blank"
+    );
+
+  }, 900);
+}
+
+
+function openGoogle() {
+
+  speak(
+    "Opening Google."
+  );
+
+  setTimeout(function () {
+
+    window.open(
+      "https://www.google.com/",
+      "_blank"
+    );
+
+  }, 900);
+}
+
+
+/* =========================
+   FAMILY CONTACTS
+========================= */
+
+function getContacts() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem("grandpaContacts")
+    ) || [];
+
+  } catch (e) {
+
+    return [];
+  }
+}
+
+
+function saveContacts(contacts) {
+
+  localStorage.setItem(
+    "grandpaContacts",
+    JSON.stringify(contacts)
+  );
+
+  displayContacts();
+}
+
+
+function addContact() {
+
+  const name =
+    document
+      .getElementById("contactName")
+      .value
+      .trim();
+
+  const phone =
+    document
+      .getElementById("contactPhone")
+      .value
+      .trim();
+
+  if (!name || !phone) {
+
+    alert(
+      "Enter a name and phone number."
+    );
+
+    return;
+  }
+
+  const contacts =
+    getContacts();
+
+  contacts.push({
+    name: name,
+    phone: phone
+  });
+
+  saveContacts(contacts);
+
+  document.getElementById(
+    "contactName"
+  ).value = "";
+
+  document.getElementById(
+    "contactPhone"
+  ).value = "";
+
+  speak(
+    name +
+    " was added to family contacts."
+  );
+}
+
+
+function displayContacts() {
+
+  const box =
+    document.getElementById("contacts");
+
+  const contacts =
+    getContacts();
+
+  box.innerHTML = "";
+
+  if (!contacts.length) {
+
+    box.innerHTML =
+      "<p>No contacts yet.</p>";
+
+    return;
+  }
+
+  contacts.forEach(function (contact, index) {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "contact";
+
+    div.innerHTML =
+      '<div class="contactName">' +
+      "👤 " +
+      escapeHTML(contact.name) +
+      "</div>" +
+
+      '<button class="call" ' +
+      'onclick="callContact(' +
+      index +
+      ')">' +
+      "📞 Call" +
+      "</button>" +
+
+      '<button class="text" ' +
+      'onclick="textContact(' +
+      index +
+      ')">' +
+      "💬 Text" +
+      "</button>" +
+
+      '<button class="remove" ' +
+      'onclick="removeContact(' +
+      index +
+      ')">' +
+      "🗑️ Remove" +
+      "</button>";
+
+    box.appendChild(div);
+  });
+}
+
+
+function escapeHTML(text) {
+
+  return String(text).replace(
+    /[&<>"']/g,
+    function (character) {
+
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[character];
+    }
+  );
+}
+
+
+function callContact(index) {
+
+  const contact =
+    getContacts()[index];
+
+  if (
+    contact &&
+    confirm(
+      "Call " +
+      contact.name +
+      "?"
+    )
+  ) {
+
+    location.href =
+      "tel:" +
+      contact.phone;
+  }
+}
+
+
+function textContact(index) {
+
+  const contact =
+    getContacts()[index];
+
+  if (
+    contact &&
+    confirm(
+      "Text " +
+      contact.name +
+      "?"
+    )
+  ) {
+
+    location.href =
+      "sms:" +
+      contact.phone;
+  }
+}
+
+
+function removeContact(index) {
+
+  const contacts =
+    getContacts();
+
+  const contact =
+    contacts[index];
+
+  if (
+    contact &&
+    confirm(
+      "Remove " +
+      contact.name +
+      "?"
+    )
+  ) {
+
+    contacts.splice(index, 1);
+
+    saveContacts(contacts);
+  }
+}
+
+
+displayContacts();
+
+
+/* =========================
+   SPEECH RECOGNITION
+========================= */
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+
+if (SpeechRecognition) {
+
+  recognition =
+    new SpeechRecognition();
+
+  recognition.continuous =
+    false;
+
+  recognition.interimResults =
+    false;
+
+  recognition.lang =
+    "en-US";
+
+
+  recognition.onstart =
+    function () {
+
+      if (!assistantSpeaking) {
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          listeningForCommand
+            ? "🎤 Listening..."
+            : "👂 Listening...";
+      }
+    };
+
+
+  recognition.onresult =
+    function (event) {
+
+      if (assistantSpeaking)
+        return;
+
+      const text =
+        event.results[0][0]
+          .transcript
+          .trim();
+
+      document.getElementById(
+        "heard"
+      ).textContent =
+        "You said: " + text;
+
+
+      if (!listeningForCommand) {
+
+        const lower =
+          text.toLowerCase();
+
+        if (
+          lower.includes(
+            "hey assistant"
+          ) ||
+          lower.includes(
+            "hey computer"
+          )
+        ) {
+
+          listeningForCommand =
+            true;
+
+          speak(
+            "Yes? How can I help?"
+          );
+        }
+
+        return;
+      }
+
+
+      listeningForCommand =
+        false;
+
+      handleCommand(text);
+    };
+
+
+  recognition.onerror =
+    function (event) {
+
+      console.log(
+        event.error
+      );
+
+      listeningForCommand =
+        false;
+
+      if (!assistantSpeaking) {
+
+        document.getElementById(
+          "status"
+        ).textContent =
+          "❌ Microphone error";
+      }
+    };
+
+
+  recognition.onend =
+    function () {
+
+      if (
+        !assistantSpeaking &&
+        wakeMode &&
+        !listeningForCommand
+      ) {
+
+        setTimeout(
+          listenForWakeWord,
+          1500
+        );
+      }
+    };
+
+} else {
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "❌ Voice recognition is not supported in this browser.";
+}
+
+
+/* =========================
+   START LISTENING
+========================= */
+
+function startListening() {
+
+  if (!recognition) {
+
+    speak(
+      "Your browser does not support voice recognition."
+    );
+
+    return;
+  }
+
+  if (assistantSpeaking)
+    return;
+
+  listeningForCommand =
+    true;
+
+  try {
+
+    recognition.start();
+
+  } catch (e) {}
+}
+
+
+/* =========================
+   WAKE WORD
+========================= */
+
+function listenForWakeWord() {
+
+  if (
+    !wakeMode ||
+    listeningForCommand ||
+    assistantSpeaking ||
+    !recognition
+  ) {
+    return;
+  }
+
+  try {
+
+    recognition.start();
+
+  } catch (e) {}
+}
+
+
+function toggleWakeMode() {
+
+  if (!recognition)
+    return;
+
+  wakeMode =
+    !wakeMode;
+
+  const button =
+    document.getElementById(
+      "wakeButton"
+    );
+
+
+  if (wakeMode) {
+
+    button.textContent =
+      "🔴 DISABLE HEY ASSISTANT";
+
+    speak(
+      "Wake mode is on. Say Hey Assistant."
+    );
+
+  } else {
+
+    button.textContent =
+      "🟢 HEY ASSISTANT";
+
+    try {
+
+      recognition.stop();
+
+    } catch (e) {}
+
+    speak(
+      "Wake mode is off."
+    );
+  }
+}
+
+
+/* =========================
+   COMMAND PROCESSING
+========================= */
+
+function handleCommand(command) {
+
+  const text =
+    command
+      .toLowerCase()
+      .trim();
+
+
+  /* TIME */
+
+  if (
+    text.includes("what time") ||
+    text.includes("time is it") ||
+    text.includes("tell me the time") ||
+    text.includes("current time") ||
+    text === "time"
+  ) {
+
+    sayTime();
+
+    return;
+  }
+
+
+  /* WEATHER */
+
+  if (
+    text.includes("weather") ||
+    text.includes("temperature") ||
+    text.includes("outside")
+  ) {
+
+    getWeather(true);
+
+    return;
+  }
+
+
+  /* HELLO */
+
+  if (
+    text.includes("hello") ||
+    text === "hi"
+  ) {
+
+    sayHello();
+
+    return;
+  }
+
+
+  /* YOUTUBE */
+
+  if (
+    text.includes("youtube")
+  ) {
+
+    openYouTube();
+
+    return;
+  }
+
+
+  /* GOOGLE */
+
+  if (
+    text.includes("google")
+  ) {
+
+    openGoogle();
+
+    return;
+  }
+
+
+  /* TIMER */
+
+  const timerMatch =
+    text.match(
+      /(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/
+    );
+
+
+  if (
+    text.includes("timer") &&
+    timerMatch
+  ) {
+
+    setTimer(
+      parseFloat(
+        timerMatch[1]
+      )
+    );
+
+    return;
+  }
+
+
+  /* CALL */
+
+  if (
+    text.includes("call")
+  ) {
+
+    const contacts =
+      getContacts();
+
+    for (
+      let i = 0;
+      i < contacts.length;
+      i++
+    ) {
+
+      if (
+        text.includes(
+          contacts[i]
+            .name
+            .toLowerCase()
+        )
+      ) {
+
+        return callContact(i);
+      }
+    }
+
+    return speak(
+      "I couldn't find that contact."
+    );
+  }
+
+
+  /* TEXT */
+
+  if (
+    text.includes("text") ||
+    text.includes("message")
+  ) {
+
+    const contacts =
+      getContacts();
+
+    for (
+      let i = 0;
+      i < contacts.length;
+      i++
+    ) {
+
+      if (
+        text.includes(
+          contacts[i]
+            .name
+            .toLowerCase()
+        )
+      ) {
+
+        return textContact(i);
+      }
+    }
+
+    return speak(
+      "I couldn't find that contact."
+    );
+  }
+
+
+  /* NOTES */
+
+  if (
+    text.includes("remember") ||
+    text.includes("note")
+  ) {
+
+    const note =
+      command
+        .replace(
+          /remember|note/ig,
+          ""
+        )
+        .trim();
+
+    if (note) {
+
+      const notes =
+        getNotes();
+
+      notes.push({
+        text: note,
+        time: new Date()
+          .toLocaleString()
+      });
+
+      localStorage.setItem(
+        "grandpaNotes",
+        JSON.stringify(notes)
+      );
+
+      return speak(
+        "I saved that note."
+      );
+    }
+  }
+
+
+  /* REMINDERS */
+
+  const reminderMatch =
+    text.match(
+      /remind me in (\d+)\s*(minute|minutes|hour|hours)/
+    );
+
+
+  if (reminderMatch) {
+
+    const amount =
+      Number(
+        reminderMatch[1]
+      ) *
+      (
+        reminderMatch[2]
+          .startsWith("hour")
+          ? 60
+          : 1
+      );
+
+
+    const clean =
+      command
+        .replace(
+          reminderMatch[0],
+          ""
+        )
+        .replace(
+          /to/i,
+          ""
+        )
+        .trim();
+
+
+    return addReminder(
+      clean || "your reminder",
+      amount
+    );
+  }
+
+
+  /* FAMILY CHAT */
+
+  if (
+    text.includes("family chat") ||
+    text.includes("family messages")
+  ) {
+
+    location.href =
+      "family.html";
+
+    return;
+  }
+
+
+  /* AI */
+
+  if (
+    typeof window.askGrandpaAI ===
+    "function"
+  ) {
+
+    askGrandpaAI(command);
+
+  } else {
+
+    speak(
+      "I heard you say " +
+      command +
+      ". I don't know how to do that yet."
+    );
+  }
+}
+
+
+/* =========================
+   AI CHAT BUTTON
+========================= */
+
+function openAIChat() {
+
+  if (
+    typeof window.askGrandpaAI ===
+    "function"
+  ) {
+
+    const question =
+      prompt(
+        "What would you like to ask the AI?"
+      );
+
+    if (question) {
+
+      askGrandpaAI(question);
+    }
+
+  } else {
+
+    speak(
+      "The AI is not available right now."
+    );
+  }
+}
+
+</script>
+
+</body>
+</html>
+```
