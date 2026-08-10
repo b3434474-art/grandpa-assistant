@@ -8,6 +8,7 @@
 <title>Grandpa Assistant</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -15,251 +16,173 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
   background: #111;
   color: white;
+  font-family: Arial, sans-serif;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .app {
-  width: min(1000px, 95%);
+  width: min(900px, 95%);
   text-align: center;
-  padding: 20px 0;
+  padding: 25px 0;
 }
 
 h1 {
   font-size: 48px;
-  margin: 0 0 5px;
+  margin: 0 0 10px;
 }
 
 #clock {
-  font-size: 58px;
+  font-size: 60px;
   font-weight: bold;
-  margin: 10px;
+  margin: 15px;
 }
 
 #status {
-  font-size: 30px;
-  margin: 15px 0;
-  min-height: 45px;
+  font-size: 28px;
+  min-height: 40px;
+  margin: 15px;
 }
 
 #heard {
-  font-size: 24px;
+  font-size: 23px;
   min-height: 35px;
-  margin-bottom: 20px;
-}
-
-#weather {
-  font-size: 28px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 20px;
-  background: #222;
-  max-width: 700px;
-}
-
-#timer {
-  font-size: 32px;
-  margin: 20px;
-  min-height: 40px;
+  margin: 15px;
 }
 
 button {
   border: none;
-  border-radius: 20px;
-  padding: 22px 35px;
+  border-radius: 18px;
+  padding: 20px 30px;
   margin: 8px;
-  font-size: 25px;
+  font-size: 23px;
   font-weight: bold;
   cursor: pointer;
 }
 
-button:hover {
-  transform: scale(1.03);
-}
-
-#listenButton,
-#wakeButton,
-#micButton,
-.settings-button,
-.help-button {
-  width: 80%;
+#talkButton {
+  width: 85%;
   max-width: 600px;
-}
-
-#listenButton {
   background: white;
   color: black;
 }
 
 #wakeButton {
+  width: 85%;
+  max-width: 600px;
   background: #1976d2;
   color: white;
 }
 
-#micButton {
-  background: #444;
-  color: white;
-}
-
-.small-button {
+.small {
   background: #333;
   color: white;
 }
 
-.section-title {
+#weather {
+  background: #222;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 25px auto;
+  max-width: 700px;
+  font-size: 27px;
+}
+
+#timer {
   font-size: 30px;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin: 20px;
+  min-height: 40px;
+}
+
+#contacts {
+  margin-top: 25px;
 }
 
 .contact {
   background: #222;
-  border-radius: 20px;
+  border-radius: 18px;
   padding: 20px;
   margin: 15px auto;
   max-width: 700px;
 }
 
-.contact-name {
-  font-size: 30px;
+.contactName {
+  font-size: 28px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.call-button {
+.call {
   background: #1769aa;
   color: white;
 }
 
-.text-button {
+.text {
   background: #388e3c;
   color: white;
 }
 
-.delete-button {
+.remove {
   background: #8b0000;
   color: white;
   font-size: 18px;
-  padding: 12px 20px;
 }
 
-.help-button {
-  background: #b00020;
-  color: white;
-  font-size: 32px;
-}
-
-.settings-button {
-  background: #555;
-  color: white;
-}
-
-#helpMessage {
-  display: none;
-  background: #2a0000;
-  border: 3px solid #ff4444;
-  border-radius: 20px;
-  padding: 25px;
-  margin: 20px auto;
-  max-width: 700px;
-  font-size: 25px;
-}
-
-#settingsPanel {
-  display: none;
+#settings {
   background: #222;
-  border: 3px solid #777;
   border-radius: 20px;
   padding: 25px;
-  margin: 20px auto;
-  max-width: 700px;
+  margin-top: 25px;
 }
 
-#settingsPanel h2 {
-  font-size: 32px;
-}
-
-#settingsPanel label {
-  display: block;
-  font-size: 22px;
-  margin-top: 15px;
-}
-
-#settingsPanel input {
-  width: 90%;
+input {
   padding: 15px;
-  margin-top: 8px;
+  margin: 8px;
   border-radius: 10px;
   border: none;
   font-size: 20px;
+  width: 80%;
+  max-width: 450px;
 }
 
-.save-button {
+.add {
   background: #1976d2;
   color: white;
 }
 
-.close-button {
-  background: #555;
-  color: white;
-}
-
-#savedMessage {
-  font-size: 20px;
-  margin-top: 15px;
-  min-height: 25px;
-}
-
-#wakeStatus {
-  font-size: 22px;
-  margin: 10px;
-}
-
-.on {
-  color: #4caf50;
-}
-
-.off {
-  color: #ff5252;
-}
-
-#contacts {
-  max-width: 800px;
-  margin: auto;
-}
-
-.empty {
-  font-size: 22px;
-  color: #aaa;
-  margin: 15px;
-}
 </style>
 </head>
 
 <body>
 
-<main class="app">
+<div class="app">
 
 <h1>🎙️ Grandpa Assistant</h1>
 
-<div id="clock">--:--</div>
-
-<div id="status">Ready</div>
-
-<div id="heard">
-  Press the microphone and talk.
+<div id="clock">
+  --:--
 </div>
 
+<div id="status">
+  Ready
+</div>
+
+<div id="heard">
+  Press TALK TO ME and speak.
+</div>
+
+
 <button
-  id="listenButton"
-  onclick="startCommandListening()"
+  id="talkButton"
+  onclick="startListening()"
 >
   🎤 TALK TO ME
 </button>
+
 
 <button
   id="wakeButton"
@@ -268,183 +191,144 @@ button:hover {
   🟢 ENABLE "HEY ASSISTANT"
 </button>
 
-<div id="wakeStatus">
-  Wake mode:
-  <span class="off">OFF</span>
-</div>
-
-<button
-  id="micButton"
-  onclick="toggleMicrophone()"
->
-  🔇 Microphone Control
-</button>
 
 <div id="weather">
   🌤️ Loading weather...
 </div>
 
-<div id="timer"></div>
+
+<div id="timer">
+</div>
+
 
 <button
-  class="small-button"
+  class="small"
   onclick="sayTime()"
 >
   🕐 What time is it?
 </button>
 
+
 <button
-  class="small-button"
+  class="small"
   onclick="getWeather(true)"
 >
   🌤️ Weather
 </button>
 
+
 <button
-  class="small-button"
+  class="small"
   onclick="sayHello()"
 >
   👋 Hello
 </button>
 
 
+<button
+  class="small"
+  onclick="openYouTube()"
+>
+  ▶️ YouTube
+</button>
+
+
+<button
+  class="small"
+  onclick="openGoogle()"
+>
+  🔎 Google
+</button>
+
+
 <!-- FAMILY -->
 
-<div class="section-title">
+<h2>
   👨‍👩‍👧 Family
+</h2>
+
+<div id="contacts">
 </div>
 
-<div id="contacts"></div>
 
+<!-- CONTACT SETTINGS -->
 
-<!-- SETTINGS -->
+<div id="settings">
 
-<div class="section-title">
-  ⚙️ Settings
-</div>
+<h2>
+  ➕ Add Family Contact
+</h2>
+
+<input
+  id="contactName"
+  placeholder="Name"
+/>
+
+<br>
+
+<input
+  id="contactPhone"
+  placeholder="Phone number"
+  type="tel"
+/>
+
+<br>
 
 <button
-  class="settings-button"
-  onclick="showSettings()"
+  class="add"
+  onclick="addContact()"
 >
-  ⚙️ Family Contacts
+  Add Contact
 </button>
-
-<div id="settingsPanel">
-
-  <h2>👨‍👩‍👧 Family Contacts</h2>
-
-  <label>Contact name</label>
-
-  <input
-    id="contactName"
-    type="text"
-    placeholder="Example: Helen"
-  >
-
-  <label>Phone number</label>
-
-  <input
-    id="contactPhone"
-    type="tel"
-    placeholder="Example: 5755551234"
-  >
-
-  <br>
-
-  <button
-    class="save-button"
-    onclick="addContact()"
-  >
-    ➕ Add Contact
-  </button>
-
-  <button
-    class="close-button"
-    onclick="closeSettings()"
-  >
-    Close
-  </button>
-
-  <div id="savedMessage"></div>
-
-</div>
-
-
-<!-- HELP -->
-
-<div class="section-title">
-  🆘 Need Help?
-</div>
-
-<button
-  class="help-button"
-  onclick="showHelp()"
->
-  🆘 I NEED HELP
-</button>
-
-<div id="helpMessage">
-
-  <strong>Do you need help?</strong>
-
-  <br><br>
-
-  Choose a family member from the list above
-  to call or text them.
-
-  <br><br>
-
-  <button
-    class="close-button"
-    onclick="closeHelp()"
-  >
-    Cancel
-  </button>
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   GLOBAL VARIABLES
-===================================================== */
+/* ==================================================
+   VARIABLES
+================================================== */
 
-let microphoneEnabled = true;
-
-let wakeMode = false;
+let recognition = null;
 
 let listeningForCommand = false;
 
-let assistantIsSpeaking = false;
+let wakeMode = false;
 
-let recognition = null;
+let microphoneEnabled = true;
+
+let assistantSpeaking = false;
 
 let timerInterval = null;
 
 
-/* =====================================================
-   TEXT TO SPEECH
-===================================================== */
+/* ==================================================
+   SPEAK
+================================================== */
 
-function speak(text) {
+function speak(message) {
 
   /*
-    IMPORTANT:
-    Stop the microphone BEFORE the assistant talks.
-    This prevents the assistant from hearing itself.
+    STOP MICROPHONE FIRST.
+    This prevents the assistant from
+    hearing its own voice.
   */
 
-  assistantIsSpeaking = true;
+  assistantSpeaking = true;
 
   if (recognition) {
 
     try {
+
       recognition.stop();
+
     } catch (error) {
+
       console.log(error);
+
     }
+
   }
 
   listeningForCommand = false;
@@ -452,9 +336,10 @@ function speak(text) {
   window.speechSynthesis.cancel();
 
   const speech =
-    new SpeechSynthesisUtterance(text);
+    new SpeechSynthesisUtterance(message);
 
   speech.rate = 0.9;
+
   speech.pitch = 1;
 
   document.getElementById("status").textContent =
@@ -462,14 +347,15 @@ function speak(text) {
 
   speech.onend = function() {
 
-    assistantIsSpeaking = false;
+    assistantSpeaking = false;
 
     document.getElementById("status").textContent =
       "Ready";
 
     /*
-      Give the microphone a moment before
-      listening again.
+      Wait before turning the microphone
+      back on so it doesn't hear the
+      end of its own sentence.
     */
 
     if (
@@ -477,19 +363,10 @@ function speak(text) {
       microphoneEnabled
     ) {
 
-      setTimeout(function() {
-
-        if (
-          !assistantIsSpeaking &&
-          wakeMode &&
-          microphoneEnabled
-        ) {
-
-          listenForWakeWord();
-
-        }
-
-      }, 1200);
+      setTimeout(
+        listenForWakeWord,
+        1500
+      );
 
     }
 
@@ -497,7 +374,7 @@ function speak(text) {
 
   speech.onerror = function() {
 
-    assistantIsSpeaking = false;
+    assistantSpeaking = false;
 
     document.getElementById("status").textContent =
       "Ready";
@@ -505,12 +382,13 @@ function speak(text) {
   };
 
   window.speechSynthesis.speak(speech);
+
 }
 
 
-/* =====================================================
+/* ==================================================
    CLOCK
-===================================================== */
+================================================== */
 
 function updateClock() {
 
@@ -524,16 +402,20 @@ function updateClock() {
 
   document.getElementById("clock").textContent =
     time;
+
 }
 
-setInterval(updateClock, 1000);
+setInterval(
+  updateClock,
+  1000
+);
 
 updateClock();
 
 
-/* =====================================================
+/* ==================================================
    TIME
-===================================================== */
+================================================== */
 
 function sayTime() {
 
@@ -546,75 +428,97 @@ function sayTime() {
     });
 
   speak(
-    "The time is " + time
+    "The time is " +
+    time
   );
+
 }
 
 
-/* =====================================================
+/* ==================================================
    HELLO
-===================================================== */
+================================================== */
 
 function sayHello() {
 
   speak(
     "Hello! How can I help you?"
   );
+
 }
 
 
-/* =====================================================
+/* ==================================================
    WEATHER
-===================================================== */
+================================================== */
 
-async function getWeather(speakWeather = false) {
+async function getWeather(
+  speakWeather = false
+) {
 
-  const weatherBox =
+  const box =
     document.getElementById("weather");
 
-  weatherBox.textContent =
+  box.textContent =
     "🌤️ Getting Artesia weather...";
+
 
   try {
 
-    const latitude = 32.8423;
+    const latitude =
+      32.8423;
 
-    const longitude = -104.4406;
+    const longitude =
+      -104.4406;
+
 
     const url =
       "https://api.open-meteo.com/v1/forecast" +
-      "?latitude=" + latitude +
-      "&longitude=" + longitude +
+      "?latitude=" +
+      latitude +
+      "&longitude=" +
+      longitude +
       "&current=temperature_2m,weather_code,wind_speed_10m" +
       "&temperature_unit=fahrenheit" +
       "&wind_speed_unit=mph";
 
+
     const response =
       await fetch(url);
 
+
     if (!response.ok) {
-      throw new Error("Weather request failed");
+
+      throw new Error(
+        "Weather failed"
+      );
+
     }
+
 
     const data =
       await response.json();
+
 
     const temperature =
       Math.round(
         data.current.temperature_2m
       );
 
+
     const wind =
       Math.round(
         data.current.wind_speed_10m
       );
 
+
     const description =
-      getWeatherDescription(
+      weatherDescription(
         data.current.weather_code
       );
 
-    weatherBox.innerHTML =
+
+    box.innerHTML =
       "🌤️ <strong>Artesia, New Mexico</strong><br>" +
       temperature +
       "°F — " +
@@ -623,10 +527,12 @@ async function getWeather(speakWeather = false) {
       wind +
       " mph";
 
+
     if (speakWeather) {
 
       speak(
-        "In Artesia, New Mexico, it is " +
+        "In Artesia, New Mexico, " +
+        "it is " +
         temperature +
         " degrees Fahrenheit and " +
         description +
@@ -637,24 +543,25 @@ async function getWeather(speakWeather = false) {
 
   } catch (error) {
 
-    console.error(error);
+    console.log(error);
 
-    weatherBox.textContent =
-      "❌ Couldn't get the weather.";
+    box.textContent =
+      "❌ Weather unavailable.";
 
     if (speakWeather) {
 
       speak(
-        "Sorry, I couldn't get the weather right now."
+        "Sorry, I couldn't get the weather."
       );
 
     }
 
   }
+
 }
 
 
-function getWeatherDescription(code) {
+function weatherDescription(code) {
 
   if (code === 0)
     return "clear skies";
@@ -681,14 +588,15 @@ function getWeatherDescription(code) {
     return "thunderstorms";
 
   return "unknown conditions";
+
 }
 
 getWeather();
 
 
-/* =====================================================
+/* ==================================================
    TIMER
-===================================================== */
+================================================== */
 
 function setTimer(minutes) {
 
@@ -702,7 +610,9 @@ function setTimer(minutes) {
     );
 
     return;
+
   }
+
 
   if (timerInterval) {
 
@@ -712,16 +622,19 @@ function setTimer(minutes) {
 
   }
 
-  const timerBox =
-    document.getElementById("timer");
 
   let seconds =
     Math.round(
       minutes * 60
     );
 
+
+  const timerBox =
+    document.getElementById("timer");
+
+
   speak(
-    "Okay. Timer set for " +
+    "Timer set for " +
     minutes +
     (
       minutes === 1
@@ -738,8 +651,10 @@ function setTimer(minutes) {
         seconds / 60
       );
 
+
     const secs =
       seconds % 60;
+
 
     timerBox.textContent =
       "⏰ Timer: " +
@@ -751,7 +666,9 @@ function setTimer(minutes) {
       );
 
 
-    if (seconds <= 0) {
+    if (
+      seconds <= 0
+    ) {
 
       clearInterval(
         timerInterval
@@ -759,15 +676,20 @@ function setTimer(minutes) {
 
       timerInterval = null;
 
+
       timerBox.textContent =
         "🔔 TIMER FINISHED!";
+
 
       speak(
         "Your timer is finished."
       );
 
+
       return;
+
     }
+
 
     seconds--;
 
@@ -776,17 +698,65 @@ function setTimer(minutes) {
 
   updateTimer();
 
+
   timerInterval =
     setInterval(
       updateTimer,
       1000
     );
+
 }
 
 
-/* =====================================================
-   CONTACT STORAGE
-===================================================== */
+/* ==================================================
+   OPEN WEBSITES
+================================================== */
+
+function openYouTube() {
+
+  speak(
+    "Opening YouTube."
+  );
+
+  setTimeout(
+    function() {
+
+      window.open(
+        "https://www.youtube.com/",
+        "_blank"
+      );
+
+    },
+    1000
+  );
+
+}
+
+
+function openGoogle() {
+
+  speak(
+    "Opening Google."
+  );
+
+  setTimeout(
+    function() {
+
+      window.open(
+        "https://www.google.com/",
+        "_blank"
+      );
+
+    },
+    1000
+  );
+
+}
+
+
+/* ==================================================
+   CONTACTS
+================================================== */
 
 function getContacts() {
 
@@ -798,15 +768,18 @@ function getContacts() {
       )
     ) || [];
 
-  } catch (error) {
+  } catch {
 
     return [];
 
   }
+
 }
 
 
-function saveContacts(contacts) {
+function saveContacts(
+  contacts
+) {
 
   localStorage.setItem(
     "grandpaContacts",
@@ -816,151 +789,9 @@ function saveContacts(contacts) {
   );
 
   displayContacts();
+
 }
 
-
-/* =====================================================
-   DISPLAY CONTACTS
-===================================================== */
-
-function displayContacts() {
-
-  const contactsBox =
-    document.getElementById(
-      "contacts"
-    );
-
-  const contacts =
-    getContacts();
-
-  contactsBox.innerHTML = "";
-
-
-  if (contacts.length === 0) {
-
-    contactsBox.innerHTML =
-      '<div class="empty">' +
-      "No family contacts added yet." +
-      "</div>";
-
-    return;
-  }
-
-
-  contacts.forEach(
-    function(contact, index) {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.className =
-        "contact";
-
-
-      const name =
-        document.createElement(
-          "div"
-        );
-
-      name.className =
-        "contact-name";
-
-      name.textContent =
-        "👤 " +
-        contact.name;
-
-      div.appendChild(name);
-
-
-      const callButton =
-        document.createElement(
-          "button"
-        );
-
-      callButton.className =
-        "call-button";
-
-      callButton.textContent =
-        "📞 Call";
-
-      callButton.onclick =
-        function() {
-
-          callContact(index);
-
-        };
-
-      div.appendChild(
-        callButton
-      );
-
-
-      const textButton =
-        document.createElement(
-          "button"
-        );
-
-      textButton.className =
-        "text-button";
-
-      textButton.textContent =
-        "💬 Text";
-
-      textButton.onclick =
-        function() {
-
-          textContact(index);
-
-        };
-
-      div.appendChild(
-        textButton
-      );
-
-
-      const deleteButton =
-        document.createElement(
-          "button"
-        );
-
-      deleteButton.className =
-        "delete-button";
-
-      deleteButton.textContent =
-        "🗑️ Remove";
-
-      deleteButton.onclick =
-        function() {
-
-          deleteContact(index);
-
-        };
-
-
-      div.appendChild(
-        document.createElement(
-          "br"
-        )
-      );
-
-      div.appendChild(
-        deleteButton
-      );
-
-      contactsBox.appendChild(
-        div
-      );
-
-    }
-  );
-}
-
-
-/* =====================================================
-   ADD CONTACT
-===================================================== */
 
 function addContact() {
 
@@ -968,6 +799,7 @@ function addContact() {
     document.getElementById(
       "contactName"
     ).value.trim();
+
 
   const phone =
     document.getElementById(
@@ -981,10 +813,11 @@ function addContact() {
   ) {
 
     alert(
-      "Please enter both a name and phone number."
+      "Enter a name and phone number."
     );
 
     return;
+
   }
 
 
@@ -1013,298 +846,190 @@ function addContact() {
   ).value = "";
 
 
-  document.getElementById(
-    "savedMessage"
-  ).textContent =
-    "✅ Contact added!";
-
-
   speak(
     name +
-    " has been added to your family contacts."
+    " has been added."
   );
+
 }
 
 
-/* =====================================================
-   DELETE CONTACT
-===================================================== */
+function displayContacts() {
 
-function deleteContact(index) {
+  const box =
+    document.getElementById(
+      "contacts"
+    );
+
 
   const contacts =
     getContacts();
 
-  const contact =
-    contacts[index];
 
-
-  if (!contact) {
-    return;
-  }
+  box.innerHTML = "";
 
 
   if (
-    !confirm(
-      "Remove " +
-      contact.name +
-      " from family contacts?"
-    )
+    contacts.length === 0
   ) {
 
+    box.innerHTML =
+      "<p>No contacts yet.</p>";
+
     return;
+
   }
 
 
-  contacts.splice(
-    index,
-    1
+  contacts.forEach(
+    function(contact, index) {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "contact";
+
+
+      div.innerHTML =
+        '<div class="contactName">' +
+        "👤 " +
+        contact.name +
+        "</div>" +
+
+        '<button class="call" onclick="callContact(' +
+        index +
+        ')">📞 Call</button>' +
+
+        '<button class="text" onclick="textContact(' +
+        index +
+        ')">💬 Text</button>' +
+
+        '<br>' +
+
+        '<button class="remove" onclick="removeContact(' +
+        index +
+        ')">🗑️ Remove</button>';
+
+
+      box.appendChild(
+        div
+      );
+
+    }
   );
 
-
-  saveContacts(
-    contacts
-  );
-
-
-  speak(
-    contact.name +
-    " was removed."
-  );
 }
 
-
-/* =====================================================
-   CALL CONTACT
-===================================================== */
 
 function callContact(index) {
 
   const contacts =
     getContacts();
 
+
   const contact =
     contacts[index];
 
 
-  if (!contact) {
+  if (!contact)
     return;
-  }
 
 
   if (
-    !confirm(
+    confirm(
       "Call " +
       contact.name +
       "?"
     )
   ) {
 
-    return;
+    window.location.href =
+      "tel:" +
+      contact.phone;
+
   }
 
-
-  speak(
-    "Opening a call to " +
-    contact.name
-  );
-
-
-  setTimeout(
-    function() {
-
-      window.location.href =
-        "tel:" +
-        contact.phone;
-
-    },
-    1000
-  );
 }
 
-
-/* =====================================================
-   TEXT CONTACT
-===================================================== */
 
 function textContact(index) {
 
   const contacts =
     getContacts();
 
+
   const contact =
     contacts[index];
 
 
-  if (!contact) {
+  if (!contact)
     return;
-  }
 
 
   if (
-    !confirm(
-      "Open a text message to " +
+    confirm(
+      "Text " +
       contact.name +
       "?"
     )
   ) {
 
-    return;
+    window.location.href =
+      "sms:" +
+      contact.phone;
+
   }
 
-
-  speak(
-    "Opening a text message to " +
-    contact.name
-  );
-
-
-  setTimeout(
-    function() {
-
-      window.location.href =
-        "sms:" +
-        contact.phone;
-
-    },
-    1000
-  );
 }
 
 
-/* =====================================================
-   FIND CONTACT
-===================================================== */
-
-function findContactByCommand(text) {
+function removeContact(index) {
 
   const contacts =
     getContacts();
 
 
-  for (
-    let i = 0;
-    i < contacts.length;
-    i++
+  const contact =
+    contacts[index];
+
+
+  if (!contact)
+    return;
+
+
+  if (
+    confirm(
+      "Remove " +
+      contact.name +
+      "?"
+    )
   ) {
 
-    if (
-      text.includes(
-        contacts[i].name.toLowerCase()
-      )
-    ) {
-
-      return i;
-
-    }
-
-  }
-
-
-  return -1;
-}
-
-
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-function showSettings() {
-
-  document.getElementById(
-    "settingsPanel"
-  ).style.display =
-    "block";
-}
-
-
-function closeSettings() {
-
-  document.getElementById(
-    "settingsPanel"
-  ).style.display =
-    "none";
-}
-
-
-/* =====================================================
-   HELP
-===================================================== */
-
-function showHelp() {
-
-  document.getElementById(
-    "helpMessage"
-  ).style.display =
-    "block";
-
-
-  speak(
-    "You selected help. " +
-    "You can call a family member from the family list."
-  );
-}
-
-
-function closeHelp() {
-
-  document.getElementById(
-    "helpMessage"
-  ).style.display =
-    "none";
-}
-
-
-/* =====================================================
-   MICROPHONE
-===================================================== */
-
-function toggleMicrophone() {
-
-  microphoneEnabled =
-    !microphoneEnabled;
-
-
-  const button =
-    document.getElementById(
-      "micButton"
+    contacts.splice(
+      index,
+      1
     );
 
 
-  if (microphoneEnabled) {
-
-    button.textContent =
-      "🔇 Microphone Control";
-
-    document.getElementById(
-      "status"
-    ).textContent =
-      "Ready";
-
-  } else {
-
-    button.textContent =
-      "🔴 MICROPHONE OFF";
-
-    document.getElementById(
-      "status"
-    ).textContent =
-      "🔴 Microphone disabled";
-
-
-    try {
-
-      recognition.stop();
-
-    } catch (error) {}
+    saveContacts(
+      contacts
+    );
 
   }
+
 }
 
 
-/* =====================================================
+displayContacts();
+
+
+/* ==================================================
    SPEECH RECOGNITION
-===================================================== */
+================================================== */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
@@ -1333,7 +1058,7 @@ if (SpeechRecognition) {
     function() {
 
       if (
-        assistantIsSpeaking
+        assistantSpeaking
       ) {
 
         return;
@@ -1348,14 +1073,14 @@ if (SpeechRecognition) {
         document.getElementById(
           "status"
         ).textContent =
-          "🎤 Listening for your command...";
+          "🎤 Listening...";
 
       } else {
 
         document.getElementById(
           "status"
         ).textContent =
-          '👂 Listening for "Hey Assistant"...';
+          '👂 Say "Hey Assistant"...';
 
       }
 
@@ -1366,12 +1091,12 @@ if (SpeechRecognition) {
     function(event) {
 
       /*
-        Ignore anything accidentally captured
-        while the assistant is speaking.
+        Ignore microphone input while
+        the assistant is speaking.
       */
 
       if (
-        assistantIsSpeaking
+        assistantSpeaking
       ) {
 
         return;
@@ -1381,8 +1106,8 @@ if (SpeechRecognition) {
 
       const text =
         event.results[0][0]
-          .transcript
-          .trim();
+        .transcript
+        .trim();
 
 
       document.getElementById(
@@ -1396,9 +1121,7 @@ if (SpeechRecognition) {
         text.toLowerCase();
 
 
-      /* ==========================
-         WAKE WORD
-      ========================== */
+      /* WAKE MODE */
 
       if (
         !listeningForCommand
@@ -1423,23 +1146,15 @@ if (SpeechRecognition) {
 
         }
 
-
         return;
+
       }
 
 
-      /* ==========================
-         COMMAND
-      ========================== */
+      /* COMMAND */
 
       listeningForCommand =
         false;
-
-
-      document.getElementById(
-        "status"
-      ).textContent =
-        "🧠 Thinking...";
 
 
       handleCommand(
@@ -1463,7 +1178,7 @@ if (SpeechRecognition) {
 
 
       if (
-        !assistantIsSpeaking
+        !assistantSpeaking
       ) {
 
         document.getElementById(
@@ -1481,11 +1196,11 @@ if (SpeechRecognition) {
 
       /*
         NEVER restart the microphone
-        while the assistant is speaking.
+        while speaking.
       */
 
       if (
-        assistantIsSpeaking
+        assistantSpeaking
       ) {
 
         return;
@@ -1500,20 +1215,8 @@ if (SpeechRecognition) {
       ) {
 
         setTimeout(
-          function() {
-
-            if (
-              !assistantIsSpeaking &&
-              wakeMode &&
-              microphoneEnabled
-            ) {
-
-              listenForWakeWord();
-
-            }
-
-          },
-          1200
+          listenForWakeWord,
+          1500
         );
 
       }
@@ -1525,16 +1228,16 @@ if (SpeechRecognition) {
   document.getElementById(
     "status"
   ).textContent =
-    "❌ Voice recognition is not supported by this browser.";
+    "❌ Voice recognition is not supported.";
 
 }
 
 
-/* =====================================================
-   START COMMAND LISTENING
-===================================================== */
+/* ==================================================
+   START LISTENING
+================================================== */
 
-function startCommandListening() {
+function startListening() {
 
   if (
     !microphoneEnabled
@@ -1545,6 +1248,7 @@ function startCommandListening() {
     );
 
     return;
+
   }
 
 
@@ -1553,19 +1257,16 @@ function startCommandListening() {
   ) {
 
     speak(
-      "Sorry, your browser does not support voice recognition."
+      "Your browser does not support voice recognition."
     );
 
     return;
+
   }
 
 
-  /*
-    Make sure the assistant is not speaking.
-  */
-
   if (
-    assistantIsSpeaking
+    assistantSpeaking
   ) {
 
     return;
@@ -1583,19 +1284,16 @@ function startCommandListening() {
 
   } catch (error) {
 
-    console.log(
-      "Recognition start error:",
-      error
-    );
+    console.log(error);
 
   }
 
 }
 
 
-/* =====================================================
-   WAKE WORD LISTENING
-===================================================== */
+/* ==================================================
+   WAKE WORD
+================================================== */
 
 function listenForWakeWord() {
 
@@ -1603,7 +1301,7 @@ function listenForWakeWord() {
     !wakeMode ||
     !microphoneEnabled ||
     listeningForCommand ||
-    assistantIsSpeaking
+    assistantSpeaking
   ) {
 
     return;
@@ -1617,19 +1315,16 @@ function listenForWakeWord() {
 
   } catch (error) {
 
-    console.log(
-      "Wake recognition error:",
-      error
-    );
+    console.log(error);
 
   }
 
 }
 
 
-/* =====================================================
-   WAKE MODE ON/OFF
-===================================================== */
+/* ==================================================
+   WAKE MODE BUTTON
+================================================== */
 
 function toggleWakeMode() {
 
@@ -1638,10 +1333,11 @@ function toggleWakeMode() {
   ) {
 
     alert(
-      "Turn the microphone on first."
+      "The microphone is turned off."
     );
 
     return;
+
   }
 
 
@@ -1655,34 +1351,22 @@ function toggleWakeMode() {
     );
 
 
-  const status =
-    document.getElementById(
-      "wakeStatus"
-    );
-
-
-  if (wakeMode) {
+  if (
+    wakeMode
+  ) {
 
     button.textContent =
       '🔴 DISABLE "HEY ASSISTANT"';
 
 
-    status.innerHTML =
-      'Wake mode: <span class="on">ON</span>';
-
-
     speak(
-      "Wake mode is on. Say Hey Assistant."
+      'Wake mode is on. Say "Hey Assistant".'
     );
 
   } else {
 
     button.textContent =
       '🟢 ENABLE "HEY ASSISTANT"';
-
-
-    status.innerHTML =
-      'Wake mode: <span class="off">OFF</span>';
 
 
     try {
@@ -1701,11 +1385,13 @@ function toggleWakeMode() {
 }
 
 
-/* =====================================================
-   COMMAND PROCESSING
-===================================================== */
+/* ==================================================
+   COMMAND HANDLER
+================================================== */
 
-function handleCommand(command) {
+function handleCommand(
+  command
+) {
 
   const text =
     command.toLowerCase();
@@ -1717,8 +1403,8 @@ function handleCommand(command) {
     text.includes("what time") ||
     text.includes("time is it") ||
     text.includes("tell me the time") ||
-    text === "time" ||
-    text.includes("current time")
+    text.includes("current time") ||
+    text === "time"
   ) {
 
     sayTime();
@@ -1747,94 +1433,10 @@ function handleCommand(command) {
 
   if (
     text.includes("hello") ||
-    text === "hi" ||
-    text === "hey"
+    text === "hi"
   ) {
 
     sayHello();
-
-    return;
-
-  }
-
-
-  /* HELP */
-
-  if (
-    text.includes("help") ||
-    text.includes("i need help")
-  ) {
-
-    showHelp();
-
-    return;
-
-  }
-
-
-  /* CALL */
-
-  if (
-    text.includes("call")
-  ) {
-
-    const index =
-      findContactByCommand(
-        text
-      );
-
-
-    if (
-      index !== -1
-    ) {
-
-      callContact(
-        index
-      );
-
-      return;
-
-    }
-
-
-    speak(
-      "I couldn't find that family member."
-    );
-
-    return;
-
-  }
-
-
-  /* TEXT */
-
-  if (
-    text.includes("text") ||
-    text.includes("message")
-  ) {
-
-    const index =
-      findContactByCommand(
-        text
-      );
-
-
-    if (
-      index !== -1
-    ) {
-
-      textContact(
-        index
-      );
-
-      return;
-
-    }
-
-
-    speak(
-      "I couldn't find that family member."
-    );
 
     return;
 
@@ -1847,23 +1449,7 @@ function handleCommand(command) {
     text.includes("youtube")
   ) {
 
-    speak(
-      "Opening YouTube."
-    );
-
-
-    setTimeout(
-      function() {
-
-        window.open(
-          "https://www.youtube.com/",
-          "_blank"
-        );
-
-      },
-      1000
-    );
-
+    openYouTube();
 
     return;
 
@@ -1876,23 +1462,7 @@ function handleCommand(command) {
     text.includes("google")
   ) {
 
-    speak(
-      "Opening Google."
-    );
-
-
-    setTimeout(
-      function() {
-
-        window.open(
-          "https://www.google.com/",
-          "_blank"
-        );
-
-      },
-      1000
-    );
-
+    openGoogle();
 
     return;
 
@@ -1928,7 +1498,104 @@ function handleCommand(command) {
   }
 
 
-  /* UNKNOWN COMMAND */
+  /* CALL */
+
+  if (
+    text.includes("call")
+  ) {
+
+    const contacts =
+      getContacts();
+
+
+    for (
+      let i = 0;
+      i < contacts.length;
+      i++
+    ) {
+
+      if (
+        text.includes(
+          contacts[i].name.toLowerCase()
+        )
+      ) {
+
+        callContact(i);
+
+        return;
+
+      }
+
+    }
+
+
+    speak(
+      "I couldn't find that contact."
+    );
+
+    return;
+
+  }
+
+
+  /* TEXT */
+
+  if (
+    text.includes("text") ||
+    text.includes("message")
+  ) {
+
+    const contacts =
+      getContacts();
+
+
+    for (
+      let i = 0;
+      i < contacts.length;
+      i++
+    ) {
+
+      if (
+        text.includes(
+          contacts[i].name.toLowerCase()
+        )
+      ) {
+
+        textContact(i);
+
+        return;
+
+      }
+
+    }
+
+
+    speak(
+      "I couldn't find that contact."
+    );
+
+    return;
+
+  }
+
+
+  /* HELP */
+
+  if (
+    text.includes("help") ||
+    text.includes("i need help")
+  ) {
+
+    speak(
+      "You can ask me for the time, weather, a timer, or ask me to call or text a family member."
+    );
+
+    return;
+
+  }
+
+
+  /* UNKNOWN */
 
   speak(
     "I heard you say " +
@@ -1938,14 +1605,9 @@ function handleCommand(command) {
 
 }
 
-
-/* =====================================================
-   STARTUP
-===================================================== */
-
-displayContacts();
-
 </script>
+
+</div>
 
 </body>
 </html>
