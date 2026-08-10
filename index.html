@@ -22,33 +22,48 @@
     }
 
     .app {
-      width: min(900px, 95%);
+      width: min(1000px, 95%);
       text-align: center;
     }
 
     h1 {
       font-size: 48px;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+    }
+
+    #clock {
+      font-size: 52px;
+      font-weight: bold;
+      margin: 10px;
     }
 
     #status {
       font-size: 28px;
-      margin: 20px 0;
+      margin: 15px 0;
       min-height: 40px;
     }
 
     #heard {
       font-size: 24px;
       min-height: 35px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+    }
+
+    #weather {
+      font-size: 28px;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 20px;
+      background: #222;
+      max-width: 700px;
     }
 
     button {
       border: none;
       border-radius: 20px;
-      padding: 25px 45px;
-      margin: 10px;
-      font-size: 28px;
+      padding: 22px 35px;
+      margin: 8px;
+      font-size: 25px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -60,52 +75,65 @@
       max-width: 600px;
     }
 
-    #listenButton:hover {
-      transform: scale(1.03);
-    }
-
     .small-button {
       background: #333;
       color: white;
+    }
+
+    #timer {
+      font-size: 32px;
+      margin: 20px;
+      min-height: 40px;
     }
   </style>
 </head>
 
 <body>
 
-  <main class="app">
+<main class="app">
 
-    <h1>🎙️ Grandpa Assistant</h1>
+  <h1>🎙️ Grandpa Assistant</h1>
 
-    <div id="status">Ready</div>
+  <div id="clock">--:--</div>
 
-    <div id="heard">
-      Press the microphone and talk.
-    </div>
+  <div id="status">Ready</div>
 
-    <button id="listenButton" onclick="startListening()">
-      🎤 TALK TO ME
-    </button>
+  <div id="heard">
+    Press the microphone and talk.
+  </div>
 
-    <br>
+  <button id="listenButton" onclick="startListening()">
+    🎤 TALK TO ME
+  </button>
 
-    <button class="small-button" onclick="sayTime()">
-      🕐 What time is it?
-    </button>
+  <div id="weather">
+    🌤️ Loading weather...
+  </div>
 
-    <button class="small-button" onclick="sayHello()">
-      👋 Hello
-    </button>
+  <div id="timer"></div>
 
-  </main>
+  <button class="small-button" onclick="sayTime()">
+    🕐 What time is it?
+  </button>
+
+  <button class="small-button" onclick="getWeather()">
+    🌤️ Weather
+  </button>
+
+  <button class="small-button" onclick="sayHello()">
+    👋 Hello
+  </button>
+
+</main>
 
 <script>
 
-  // -------------------------
+  // =========================
   // TEXT TO SPEECH
-  // -------------------------
+  // =========================
 
   function speak(text) {
+
     window.speechSynthesis.cancel();
 
     const speech = new SpeechSynthesisUtterance(text);
@@ -115,26 +143,48 @@
 
     window.speechSynthesis.speak(speech);
 
-    document.getElementById("status").textContent = "🔊 Speaking...";
-    
+    document.getElementById("status").textContent =
+      "🔊 Speaking...";
+
     speech.onend = function() {
-      document.getElementById("status").textContent = "Ready";
+      document.getElementById("status").textContent =
+        "Ready";
     };
   }
 
 
-  // -------------------------
-  // SAY HELLO
-  // -------------------------
+  // =========================
+  // CLOCK
+  // =========================
+
+  function updateClock() {
+
+    const now = new Date();
+
+    const time = now.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+
+    document.getElementById("clock").textContent = time;
+  }
+
+  setInterval(updateClock, 1000);
+  updateClock();
+
+
+  // =========================
+  // HELLO
+  // =========================
 
   function sayHello() {
     speak("Hello! How can I help you?");
   }
 
 
-  // -------------------------
+  // =========================
   // TIME
-  // -------------------------
+  // =========================
 
   function sayTime() {
 
@@ -149,9 +199,174 @@
   }
 
 
-  // -------------------------
+  // =========================
+  // WEATHER
+  // Artesia, New Mexico
+  // =========================
+
+  async function getWeather(speakWeather = false) {
+
+    const weatherBox =
+      document.getElementById("weather");
+
+    weatherBox.textContent =
+      "🌤️ Getting Artesia weather...";
+
+    try {
+
+      // Artesia, New Mexico coordinates
+      const latitude = 32.8423;
+      const longitude = -104.4406;
+
+      const url =
+        "https://api.open-meteo.com/v1/forecast" +
+        "?latitude=" + latitude +
+        "&longitude=" + longitude +
+        "&current=temperature_2m,weather_code,wind_speed_10m" +
+        "&temperature_unit=fahrenheit" +
+        "&wind_speed_unit=mph";
+
+      const response = await fetch(url);
+
+      const data = await response.json();
+
+      const temperature =
+        Math.round(data.current.temperature_2m);
+
+      const wind =
+        Math.round(data.current.wind_speed_10m);
+
+      const description =
+        getWeatherDescription(
+          data.current.weather_code
+        );
+
+      weatherBox.innerHTML =
+        "🌤️ <strong>Artesia, New Mexico</strong><br>" +
+        temperature + "°F — " +
+        description +
+        "<br>💨 Wind: " +
+        wind + " mph";
+
+      if (speakWeather) {
+
+        speak(
+          "In Artesia, New Mexico, " +
+          "it is " + temperature +
+          " degrees Fahrenheit and " +
+          description + "."
+        );
+      }
+
+    } catch (error) {
+
+      weatherBox.textContent =
+        "❌ Couldn't get the weather.";
+
+      if (speakWeather) {
+        speak(
+          "Sorry, I couldn't get the weather right now."
+        );
+      }
+    }
+  }
+
+
+  function getWeatherDescription(code) {
+
+    if (code === 0)
+      return "clear skies";
+
+    if (code === 1 || code === 2)
+      return "partly cloudy";
+
+    if (code === 3)
+      return "cloudy";
+
+    if (code >= 45 && code <= 48)
+      return "foggy";
+
+    if (code >= 51 && code <= 67)
+      return "rain";
+
+    if (code >= 71 && code <= 77)
+      return "snow";
+
+    if (code >= 80 && code <= 82)
+      return "rain showers";
+
+    if (code >= 95)
+      return "thunderstorms";
+
+    return "unknown conditions";
+  }
+
+  getWeather();
+
+
+  // =========================
+  // TIMER
+  // =========================
+
+  function setTimer(minutes) {
+
+    if (!minutes || minutes <= 0) {
+      speak("Please tell me how many minutes.");
+      return;
+    }
+
+    const timerBox =
+      document.getElementById("timer");
+
+    let seconds = Math.round(minutes * 60);
+
+    speak(
+      "Okay. Timer set for " +
+      minutes +
+      (minutes === 1 ? " minute." : " minutes.")
+    );
+
+    function updateTimer() {
+
+      const mins =
+        Math.floor(seconds / 60);
+
+      const secs =
+        seconds % 60;
+
+      timerBox.textContent =
+        "⏰ Timer: " +
+        mins +
+        ":" +
+        String(secs).padStart(2, "0");
+
+      if (seconds <= 0) {
+
+        clearInterval(timerInterval);
+
+        timerBox.textContent =
+          "🔔 TIMER FINISHED!";
+
+        speak(
+          "Your timer is finished."
+        );
+
+        return;
+      }
+
+      seconds--;
+    }
+
+    updateTimer();
+
+    const timerInterval =
+      setInterval(updateTimer, 1000);
+  }
+
+
+  // =========================
   // SPEECH RECOGNITION
-  // -------------------------
+  // =========================
 
   const SpeechRecognition =
     window.SpeechRecognition ||
@@ -168,6 +383,7 @@
     recognition.lang = "en-US";
 
     recognition.onstart = function() {
+
       document.getElementById("status").textContent =
         "🎤 Listening...";
     };
@@ -194,32 +410,21 @@
       console.log(event.error);
     };
 
-    recognition.onend = function() {
-
-      if (
-        document.getElementById("status").textContent ===
-        "🎤 Listening..."
-      ) {
-        document.getElementById("status").textContent =
-          "Ready";
-      }
-    };
-
   } else {
 
     document.getElementById("status").textContent =
-      "Speech recognition isn't supported by this browser.";
+      "Speech recognition isn't supported.";
   }
 
-
-  // -------------------------
-  // START LISTENING
-  // -------------------------
 
   function startListening() {
 
     if (!recognition) {
-      speak("Sorry, your browser does not support voice recognition.");
+
+      speak(
+        "Sorry, your browser doesn't support voice recognition."
+      );
+
       return;
     }
 
@@ -227,69 +432,134 @@
   }
 
 
-  // -------------------------
-  // COMMANDS
-  // -------------------------
+  // =========================
+  // COMMAND PROCESSING
+  // =========================
 
   function handleCommand(command) {
 
-    const text = command.toLowerCase();
+    const text =
+      command.toLowerCase();
 
-    if (text.includes("hello") || text.includes("hi")) {
 
-      speak("Hello! It's nice to hear from you.");
+    // WEATHER
 
+    if (
+      text.includes("weather") ||
+      text.includes("temperature") ||
+      text.includes("outside")
+    ) {
+
+      getWeather(true);
+
+      return;
     }
 
-    else if (
+
+    // TIME
+
+    if (
       text.includes("what time") ||
       text.includes("time is it")
     ) {
 
       sayTime();
 
+      return;
     }
 
-    else if (text.includes("youtube")) {
+
+    // HELLO
+
+    if (
+      text.includes("hello") ||
+      text.includes("hi")
+    ) {
+
+      sayHello();
+
+      return;
+    }
+
+
+    // YOUTUBE
+
+    if (text.includes("youtube")) {
 
       speak("Opening YouTube.");
 
       setTimeout(function() {
+
         window.open(
           "https://www.youtube.com/",
           "_blank"
         );
+
       }, 1000);
 
+      return;
     }
 
-    else if (text.includes("google")) {
+
+    // GOOGLE
+
+    if (text.includes("google")) {
 
       speak("Opening Google.");
 
       setTimeout(function() {
+
         window.open(
           "https://www.google.com/",
           "_blank"
         );
+
       }, 1000);
 
+      return;
     }
 
-    else if (text.includes("help")) {
 
-      speak("I'm here. Please use the help button or contact your family if you need assistance.");
+    // TIMER
 
-    }
-
-    else {
-
-      speak(
-        "I heard you say " + command +
-        ". I don't know how to do that yet."
+    const timerMatch =
+      text.match(
+        /(\d+(?:\.\d+)?)\s*(minute|minutes|min|mins)/
       );
 
+    if (
+      text.includes("timer") &&
+      timerMatch
+    ) {
+
+      const minutes =
+        parseFloat(timerMatch[1]);
+
+      setTimer(minutes);
+
+      return;
     }
+
+
+    // HELP
+
+    if (text.includes("help")) {
+
+      speak(
+        "I'm here. Please contact your family if you need assistance."
+      );
+
+      return;
+    }
+
+
+    // UNKNOWN
+
+    speak(
+      "I heard you say " +
+      command +
+      ". I don't know how to do that yet."
+    );
   }
 
 </script>
